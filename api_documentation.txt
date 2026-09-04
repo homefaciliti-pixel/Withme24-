@@ -1,0 +1,219 @@
+========================================================================
+WITHME24 SOCIAL COMPANIONSHIP PLATFORM — API DOCUMENTATION
+========================================================================
+
+WithMe24 is a trusted, verified social companionship marketplace connecting
+verified adults (18+) for legitimate social activities.
+
+* Zero tolerance for dating, escort services, adult services, or sexual services.
+* All routes (except OTP send/verify) require:
+  Header: Authorization: Bearer <JWT_ACCESS_TOKEN>
+
+------------------------------------------------------------------------
+1. IDENTITY & SESSIONS
+------------------------------------------------------------------------
+
+ROUTE: POST /api/auth/send-otp
+DESCRIPTION: Request a 6-digit OTP verification code via SMS.
+PAYLOAD:
+{
+  "mobile": "+919999999999"
+}
+RESPONSE:
+{
+  "success": true,
+  "message": "OTP sent successfully. Dev sandbox mock OTP: 123456",
+  "mockOtp": "123456"
+}
+
+ROUTE: POST /api/auth/verify-otp
+DESCRIPTION: Verifies the code and logs the user in.
+PAYLOAD:
+{
+  "mobile": "+919999999999",
+  "otp": "123456"
+}
+RESPONSE:
+{
+  "success": true,
+  "message": "OTP verified successfully",
+  "accessToken": "eyJhbGciOi...",
+  "refreshToken": "eyJhbGciOi...",
+  "isNewUser": false
+}
+
+ROUTE: GET /api/auth/me
+DESCRIPTION: Retrieves the authenticated user's session profiles.
+RESPONSE:
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "name": "Sarah",
+    "mobile": "+919999999999",
+    "role": "COMPANION"
+  }
+}
+
+ROUTE: PUT /api/users/profile
+DESCRIPTION: Updates personal profile details (Name, email, city, gender, DOB).
+PAYLOAD:
+{
+  "name": "Sarah Kumar",
+  "email": "sarah@example.com",
+  "gender": "Female",
+  "date_of_birth": "1994-06-20",
+  "city_id": 1
+}
+
+------------------------------------------------------------------------
+2. COMPANIONS DISCOVERY & PROFILE MANAGEMENT
+------------------------------------------------------------------------
+
+ROUTE: GET /api/companions
+DESCRIPTION: Searches verified companion profiles in the marketplace.
+QUERY PARAMS:
+  - city_id (optional)
+  - activity_id (optional)
+  - rating (optional)
+  - date (optional)
+RESPONSE:
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "bio": "Heritage enthusiast and foodie. Join me for food crawls!",
+      "experience": "2 years hosting food walks",
+      "rating": "4.90",
+      "total_reviews": 8,
+      "user": {
+        "name": "Aditi",
+        "profile_photo": "/uploads/selfie_aditi.jpg",
+        "city": { "name": "Delhi" }
+      },
+      "companion_activities": [
+        {
+          "price_per_hour": "450.00",
+          "activity": { "name": "Food Outing" }
+        }
+      ]
+    }
+  ]
+}
+
+ROUTE: POST /api/companions/profile
+DESCRIPTION: Updates companion bio, experience, visibility and activity prices.
+PAYLOAD:
+{
+  "bio": "Heritage enthusiast and foodie. Join me for food crawls!",
+  "experience": "2 years hosting food walks",
+  "profile_visibility": "PUBLIC",
+  "activities": [
+    { "activity_id": 1, "price_per_hour": 450 }
+  ]
+}
+
+ROUTE: POST /api/companions/availability
+DESCRIPTION: Configures open time slots on the companion's calendar.
+PAYLOAD:
+{
+  "date": "2026-09-05",
+  "start_time": "14:00",
+  "end_time": "17:00"
+}
+
+------------------------------------------------------------------------
+3. BOOKING TRANSACTIONS
+------------------------------------------------------------------------
+
+ROUTE: POST /api/bookings
+DESCRIPTION: Creates a new outing booking. Locks slot inside transaction.
+PAYLOAD:
+{
+  "companionId": 1,
+  "activityId": 1,
+  "availabilityId": 2
+}
+RESPONSE:
+{
+  "success": true,
+  "data": {
+    "id": 25,
+    "booking_number": "WM-1725123456789-9999",
+    "status": "PENDING",
+    "total_amount": 531.00
+  }
+}
+
+ROUTE: POST /api/bookings/:id/accept
+DESCRIPTION: Companion accepts the booking request. Moves to PAYMENT_PENDING.
+
+ROUTE: POST /api/bookings/:id/reject
+DESCRIPTION: Companion rejects the request. Unlocks availability slot.
+
+ROUTE: POST /api/bookings/:id/cancel
+DESCRIPTION: Cancels outing and requests refund. Requires cancellation reason.
+PAYLOAD:
+{
+  "cancellation_reason": "Emergency flight conflict"
+}
+
+ROUTE: POST /api/bookings/:id/complete
+DESCRIPTION: Companion marks session finished. Releases escrow fees to wallet.
+
+------------------------------------------------------------------------
+4. PAYMENTS & FINANCIAL ACTIONS
+------------------------------------------------------------------------
+
+ROUTE: POST /api/payments/create-order
+DESCRIPTION: Creates a transaction checkout token for a booking.
+PAYLOAD:
+{
+  "booking_id": 25
+}
+
+ROUTE: POST /api/payments/verify
+DESCRIPTION: Verifies checkout signature and marks booking CONFIRMED.
+PAYLOAD:
+{
+  "order_id": "order_123",
+  "payment_id": "pay_123",
+  "signature": "signature_123"
+}
+
+ROUTE: GET /api/earnings
+DESCRIPTION: Fetches wallet balances and payouts request log.
+
+ROUTE: POST /api/payouts
+DESCRIPTION: Requests withdrawal of available earnings.
+PAYLOAD:
+{
+  "amount": 2000
+}
+
+------------------------------------------------------------------------
+5. IDENTITY KYC & SAFETY
+------------------------------------------------------------------------
+
+ROUTE: POST /api/kyc
+DESCRIPTION: Upload identity documents. Must be Form Data.
+FIELDS:
+  - document_type: "Aadhaar" | "Passport" | "Driving License"
+  - document_front: [FILE]
+  - document_back: [FILE] (Optional)
+  - selfie: [FILE]
+
+ROUTE: POST /api/reports
+DESCRIPTION: Files moderation complaint.
+PAYLOAD:
+{
+  "reported_user_id": 5,
+  "reason": "PROHIBITED_SERVICE",
+  "description": "User asked for private matchmaking outside approved guidelines."
+}
+
+ROUTE: POST /api/users/:id/block
+DESCRIPTION: Blocks a user from interactions in both directions.
+ROUTE: DELETE /api/users/:id/block
+DESCRIPTION: Unblocks a user.

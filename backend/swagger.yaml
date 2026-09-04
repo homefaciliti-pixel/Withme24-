@@ -1,0 +1,242 @@
+openapi: 3.0.3
+info:
+  title: WithMe24 API Documentation
+  description: REST API for WithMe24 - trusted social companionship marketplace connecting verified adults for social activities.
+  version: 1.0.0
+servers:
+  - url: http://localhost:5000/api
+    description: Local Development Server
+paths:
+  /health:
+    get:
+      summary: Health Check Endpoint
+      description: Returns service status and MySQL connection viability.
+      responses:
+        '200':
+          description: Service is healthy.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  service:
+                    type: string
+                    example: WithMe24 API
+                  database:
+                    type: string
+                    example: MySQL
+                  status:
+                    type: string
+                    example: healthy
+
+  /auth/send-otp:
+    post:
+      summary: Request verification OTP
+      description: Generates a 6-digit OTP code sent to user's mobile number.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - mobile
+              properties:
+                mobile:
+                  type: string
+                  example: "+919999999999"
+      responses:
+        '200':
+          description: OTP sent successfully.
+
+  /auth/verify-otp:
+    post:
+      summary: Verify OTP & login/signup
+      description: Validates OTP code, finds/creates user, and generates token pair.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - mobile
+                - otp
+              properties:
+                mobile:
+                  type: string
+                  example: "+919999999999"
+                otp:
+                  type: string
+                  example: "123456"
+      responses:
+        '200':
+          description: Login successful.
+
+  /companions:
+    get:
+      summary: Search companions
+      description: Retrieve list of public, verified companions filtered by city, activity, rating, and date. Blocked accounts are filtered out.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: city_id
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: activity_id
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of companions.
+
+  /bookings:
+    post:
+      summary: Book a companion
+      description: Requests a companionship booking slot. Server locks availability to prevent conflicts.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - companion_id
+                - activity_id
+                - availability_id
+              properties:
+                companion_id:
+                  type: integer
+                activity_id:
+                  type: integer
+                availability_id:
+                  type: integer
+      responses:
+        '201':
+          description: Booking request submitted.
+        '409':
+          description: Double booking conflict.
+
+  /payments/create-order:
+    post:
+      summary: Create payment order
+      description: Integrates with payment service to register payment orders.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - booking_id
+              properties:
+                booking_id:
+                  type: integer
+      responses:
+        '200':
+          description: Order created.
+
+  /payments/verify:
+    post:
+      summary: Verify payment signature
+      description: Validates signature to securely confirm payment transaction and confirm booking.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - order_id
+                - payment_id
+                - signature
+              properties:
+                order_id:
+                  type: string
+                payment_id:
+                  type: string
+                signature:
+                  type: string
+      responses:
+        '200':
+          description: Payment successful, booking confirmed.
+
+  /kyc:
+    post:
+      summary: Submit KYC documents
+      description: Companion documents upload (front scan, back scan, selfie) for moderation review.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - document_type
+                - document_front
+                - selfie
+              properties:
+                document_type:
+                  type: string
+                  enum: [Aadhaar, Passport, Driving License, PAN Card]
+                document_front:
+                  type: string
+                  format: binary
+                document_back:
+                  type: string
+                  format: binary
+                selfie:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: KYC submitted successfully.
+
+  /safety/emergency:
+    post:
+      summary: SOS Panic trigger
+      description: Trigger immediate panic logs on platform and notifies emergency dispatch.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - booking_id
+              properties:
+                booking_id:
+                  type: number
+                latitude:
+                  type: string
+                longitude:
+                  type: string
+                notes:
+                  type: string
+      responses:
+        '200':
+          description: Emergency alerts dispatched.
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
