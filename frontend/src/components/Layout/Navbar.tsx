@@ -48,12 +48,24 @@ export const Navbar: React.FC = () => {
             </div>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-6">
-              <Link to="/companions" className="text-slate-600 hover:text-brand-600 text-sm font-semibold flex items-center gap-1.5 transition-colors">
-                <Compass size={16} /> Discover
+            <div className="hidden md:flex items-center gap-5">
+              <Link to="/find-partner" className="text-slate-600 hover:text-brand-600 text-xs sm:text-sm font-semibold transition-colors">
+                Find a Partner
               </Link>
-              <Link to="/safety" className="text-slate-600 hover:text-brand-600 text-sm font-semibold transition-colors">
-                Safety Center
+              <Link to="/services" className="text-slate-600 hover:text-brand-600 text-xs sm:text-sm font-semibold transition-colors">
+                Services
+              </Link>
+              <Link to="/how-it-works" className="text-slate-600 hover:text-brand-600 text-xs sm:text-sm font-semibold transition-colors">
+                How It Works
+              </Link>
+              <Link to="/become-partner" className="text-slate-600 hover:text-brand-600 text-xs sm:text-sm font-semibold transition-colors">
+                Become a Partner
+              </Link>
+              <Link to="/safety" className="text-slate-600 hover:text-brand-600 text-xs sm:text-sm font-semibold transition-colors">
+                Safety
+              </Link>
+              <Link to="/help" className="text-slate-600 hover:text-brand-600 text-xs sm:text-sm font-semibold transition-colors">
+                Help
               </Link>
 
               {isAuthenticated && user ? (
@@ -148,18 +160,46 @@ export const Navbar: React.FC = () => {
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-slate-100 bg-white p-4 space-y-3">
             <Link
-              to="/companions"
+              to="/find-partner"
               onClick={() => setMobileMenuOpen(false)}
-              className="block text-slate-700 hover:text-brand-600 font-semibold py-2"
+              className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
             >
-              Discover Companions
+              Find a Partner
+            </Link>
+            <Link
+              to="/services"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
+            >
+              Services
+            </Link>
+            <Link
+              to="/how-it-works"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
+            >
+              How It Works
+            </Link>
+            <Link
+              to="/become-partner"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
+            >
+              Become a Partner
             </Link>
             <Link
               to="/safety"
               onClick={() => setMobileMenuOpen(false)}
-              className="block text-slate-700 hover:text-brand-600 font-semibold py-2"
+              className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
             >
               Safety Center
+            </Link>
+            <Link
+              to="/help"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
+            >
+              Help Center
             </Link>
 
             {isAuthenticated ? (

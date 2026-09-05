@@ -15,6 +15,12 @@ import { Login } from './pages/Login';
 import { SafetyCenter } from './pages/SafetyCenter';
 import { CompanionsDirectory } from './pages/CompanionsDirectory';
 import { CompanionDetail } from './pages/CompanionDetail';
+import { Services } from './pages/Services';
+import { HowItWorks } from './pages/HowItWorks';
+import { BecomePartner } from './pages/BecomePartner';
+import { Pricing } from './pages/Pricing';
+import { HelpFAQ } from './pages/HelpFAQ';
+import { LegalPolicies } from './pages/LegalPolicies';
 
 // Customer Pages
 import { CustomerDashboard } from './pages/CustomerDashboard/Dashboard';
@@ -49,7 +55,22 @@ const AppContent: React.FC = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/safety" element={<SafetyCenter />} />
           <Route path="/companions" element={<CompanionsDirectory />} />
+          <Route path="/find-partner" element={<CompanionsDirectory />} />
           <Route path="/companions/:id" element={<CompanionDetail />} />
+          <Route path="/partner/:id" element={<CompanionDetail />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/how-it-works" element={<HowItWorks />} />
+          <Route path="/become-partner" element={<BecomePartner />} />
+          <Route path="/partner-benefits" element={<BecomePartner />} />
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/help" element={<HelpFAQ />} />
+          <Route path="/faq" element={<HelpFAQ />} />
+          <Route path="/terms" element={<LegalPolicies />} />
+          <Route path="/privacy" element={<LegalPolicies />} />
+          <Route path="/code-of-conduct" element={<LegalPolicies />} />
+          <Route path="/refund-policy" element={<LegalPolicies />} />
+          <Route path="/cancellation-policy" element={<LegalPolicies />} />
+          <Route path="/partner-guidelines" element={<LegalPolicies />} />
 
           {/* Customer Dashboard Routes */}
           <Route
