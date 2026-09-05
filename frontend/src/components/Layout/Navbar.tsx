@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { ShieldAlert, Bell, LogOut, User, Menu, Compass } from 'lucide-react';
+import { ShieldAlert, LogOut, Menu } from 'lucide-react';
 import { EmergencyModal } from '../EmergencyModal';
 import api from '../../services/api';
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { MapPin, Search, Star, Compass, Calendar, Sparkles } from 'lucide-react';
+import { MapPin, Star, Compass, Calendar } from 'lucide-react';
 import api from '../services/api';
 
 interface Companion {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Sidebar } from '../../components/Layout/Sidebar';
 import { useToast } from '../../components/Common/Toast';
-import { Eye, FileCheck, Check, X, ShieldAlert } from 'lucide-react';
+import { Eye, FileCheck, Check, X } from 'lucide-react';
 import api from '../../services/api';
 
 interface KYCRequest {
@@ -29,7 +29,7 @@ export const AdminKYCManager: React.FC = () => {
   // Inspector details
   const [selectedReq, setSelectedReq] = useState<KYCRequest | null>(null);
   const [signedDocs, setSignedDocs] = useState<any>(null);
-  const [loadingDocs, setLoadingDocs] = useState(false);
+  const [, setLoadingDocs] = useState(false);
   const [rejectionReason, setRejectionReason] = useState('');
   const [showRejectForm, setShowRejectForm] = useState(false);
 

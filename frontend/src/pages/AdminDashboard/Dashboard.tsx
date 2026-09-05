@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Sidebar } from '../../components/Layout/Sidebar';
-import { ShieldAlert, Users, Calendar, DollarSign, AlertCircle, FileCheck } from 'lucide-react';
+import { Users, DollarSign, AlertCircle } from 'lucide-react';
 import api from '../../services/api';
 
 interface Stats {

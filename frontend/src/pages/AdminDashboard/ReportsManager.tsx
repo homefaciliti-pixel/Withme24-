@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Sidebar } from '../../components/Layout/Sidebar';
 import { useToast } from '../../components/Common/Toast';
-import { ShieldAlert, AlertTriangle, Hammer, Ban, HeartHandshake } from 'lucide-react';
+import { ShieldAlert, Hammer } from 'lucide-react';
 import api from '../../services/api';
 
 interface ModerationCase {

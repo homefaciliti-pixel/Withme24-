@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Calendar, Clock, CreditCard, DollarSign, ArrowLeft, Star, ShieldAlert } from 'lucide-react';
+import { Calendar, Clock, CreditCard, DollarSign, ArrowLeft, Star } from 'lucide-react';
 import api from '../../services/api';
 import { useToast } from '../../components/Common/Toast';
 
@@ -69,7 +69,7 @@ export const BookingDetail: React.FC = () => {
       .then((res) => {
         if (res.data.success) setBooking(res.data.data);
       })
-      .catch((e) => {
+      .catch(() => {
         toast('Failed to load booking details', 'error');
         navigate('/dashboard/bookings');
       })

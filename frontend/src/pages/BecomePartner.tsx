@@ -1,12 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  UserCheck,
   ShieldCheck,
   DollarSign,
   Clock,
   Award,
-  CheckCircle2,
   AlertTriangle,
   ArrowRight,
   Sparkles,

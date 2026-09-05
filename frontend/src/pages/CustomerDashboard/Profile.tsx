@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Sidebar } from '../../components/Layout/Sidebar';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../components/Common/Toast';
-import { User, EyeOff, Save, Trash2, MapPin } from 'lucide-react';
+import { EyeOff, Save, Trash2 } from 'lucide-react';
 import api from '../../services/api';
 
 interface BlockedUser {

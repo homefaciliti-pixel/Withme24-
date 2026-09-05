@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
-  Shield,
   Sparkles,
   MapPin,
   Search,
@@ -15,9 +14,6 @@ import {
   Calendar,
   DollarSign,
   ArrowRight,
-  CheckCircle2,
-  Building2,
-  Users,
 } from 'lucide-react';
 import api from '../services/api';
 

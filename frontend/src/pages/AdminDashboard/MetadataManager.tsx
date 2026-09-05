@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Sidebar } from '../../components/Layout/Sidebar';
 import { useToast } from '../../components/Common/Toast';
-import { MapPin, Compass, Plus, Settings, Sparkles } from 'lucide-react';
+import { MapPin, Compass, Plus } from 'lucide-react';
 import api from '../../services/api';
 
 interface City {
@@ -22,7 +22,7 @@ export const AdminMetadataManager: React.FC = () => {
 
   const [cities, setCities] = useState<City[]>([]);
   const [activities, setActivities] = useState<Activity[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
 
   // Add City Form
   const [cityName, setCityName] = useState('');

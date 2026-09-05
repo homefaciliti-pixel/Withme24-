@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, HelpCircle, ChevronDown, ChevronUp, MessageSquare, ShieldCheck, PhoneCall } from 'lucide-react';
+import { Search, HelpCircle, ChevronDown, ChevronUp, PhoneCall } from 'lucide-react';
 
 interface FAQItem {
   question: string;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Sidebar } from '../../components/Layout/Sidebar';
-import { Briefcase, DollarSign, Calendar, Star } from 'lucide-react';
+import { Briefcase, DollarSign, Calendar } from 'lucide-react';
 import api from '../../services/api';
 import { Link } from 'react-router-dom';
 

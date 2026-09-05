@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { ShieldCheck, FileText, AlertOctagon, RefreshCw, CheckCircle2 } from 'lucide-react';
+import { AlertOctagon } from 'lucide-react';
 
 export const LegalPolicies: React.FC = () => {
   const location = useLocation();

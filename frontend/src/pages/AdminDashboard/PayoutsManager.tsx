@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Sidebar } from '../../components/Layout/Sidebar';
 import { useToast } from '../../components/Common/Toast';
-import { CreditCard, Check, X, ShieldAlert } from 'lucide-react';
+import { CreditCard, Check, X } from 'lucide-react';
 import api from '../../services/api';
 
 interface PayoutRequest {

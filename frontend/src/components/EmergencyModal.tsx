@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { X, ShieldAlert, Phone, AlertTriangle, EyeOff } from 'lucide-react';
+import { X, ShieldAlert, Phone } from 'lucide-react';
 import api from '../services/api';
 import { useToast } from './Common/Toast';
 

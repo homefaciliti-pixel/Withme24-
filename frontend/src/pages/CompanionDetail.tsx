@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { MapPin, Star, Calendar, ShieldAlert, Award, ChevronRight, Ban, X } from 'lucide-react';
+import { MapPin, Star, Calendar, ShieldAlert, Award, Ban, X } from 'lucide-react';
 import api from '../services/api';
 import { useToast } from '../components/Common/Toast';
 import { BookingModal } from '../components/BookingModal';
-import { useAuth } from '../context/AuthContext';
 
 interface CompanionDetailType {
   id: number;
@@ -57,7 +56,6 @@ export const CompanionDetail: React.FC = () => {
   const [reportReason, setReportReason] = useState<any>('HARASSMENT');
   const [reportDesc, setReportDesc] = useState('');
   
-  const { user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -71,7 +69,7 @@ export const CompanionDetail: React.FC = () => {
         if (detailRes.data.success) setCompanion(detailRes.data.data);
         if (reviewsRes.data.success) setReviews(reviewsRes.data.data);
       })
-      .catch((e) => {
+      .catch(() => {
         toast('Failed to load profile or profile is unavailable', 'error');
         navigate('/companions');
       })

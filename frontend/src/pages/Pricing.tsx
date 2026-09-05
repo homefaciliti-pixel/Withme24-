@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { CheckCircle2, Shield, Info, ArrowRight, DollarSign } from 'lucide-react';
+import { CheckCircle2, Info, ArrowRight, DollarSign } from 'lucide-react';
 
 export const Pricing: React.FC = () => {
   return (
