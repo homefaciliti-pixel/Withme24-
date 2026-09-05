@@ -114,7 +114,7 @@ export const CompanionDashboard: React.FC = () => {
                     className="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex justify-between items-center"
                   >
                     <div>
-                      <div className="text-xs font-bold text-slate-800">{b.activity.name} with {b.customer.name}</div>
+                      <div className="text-xs font-bold text-slate-800">{b.activity?.name || 'Social Outing'} with {b.customer.name}</div>
                       <div className="text-[10px] text-slate-500 mt-0.5">{b.booking_date} | {b.start_time} - {b.end_time}</div>
                     </div>
                     <span className="text-[9px] uppercase font-black px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
