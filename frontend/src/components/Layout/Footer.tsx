@@ -85,7 +85,7 @@ export const Footer: React.FC = () => {
         </div>
 
         <div className="flex flex-col sm:flex-row justify-between items-center text-[11px] text-slate-500 gap-4 border-t border-slate-900 pt-6">
-          <div>© 2026 WithMe24.com (Superhome / WithMe24 Technologies). All rights reserved.</div>
+          <div>© 2026 WithMe24.com (Superhome Technologies). All rights reserved.</div>
           <div className="flex gap-4 font-medium">
             <Link to="/terms" className="hover:text-slate-400">Terms</Link>
             <Link to="/privacy" className="hover:text-slate-400">Privacy</Link>
