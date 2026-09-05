@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Sidebar } from '../../components/Layout/Sidebar';
+import { UserNavTabs } from '../../components/Layout/UserNavTabs';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../components/Common/Toast';
 import { EyeOff, Save, Trash2 } from 'lucide-react';
@@ -59,10 +59,10 @@ export const CustomerProfile: React.FC = () => {
       });
       if (res.data.success) {
         setProfilePhoto(res.data.data.url);
-        toast('Profile photo uploaded! Save profile to apply.', 'success');
+        toast('Photo uploaded successfully', 'success');
       }
     } catch (err: any) {
-      toast('Failed to upload photo', 'error');
+      toast(err.response?.data?.message || 'Failed to upload photo', 'error');
     } finally {
       setUploadingPhoto(false);
     }
@@ -76,13 +76,13 @@ export const CustomerProfile: React.FC = () => {
         name,
         email,
         gender,
-        date_of_birth: dob || null,
+        date_of_birth: dob,
         city_id: cityId || null,
-        profile_photo: profilePhoto || null,
+        profile_photo: profilePhoto,
       });
 
       if (res.data.success) {
-        toast('Profile updated successfully!', 'success');
+        toast('Profile updated successfully', 'success');
         await refreshUser();
       }
     } catch (err: any) {
@@ -92,23 +92,22 @@ export const CustomerProfile: React.FC = () => {
     }
   };
 
-  const handleUnblock = async (id: number) => {
+  const handleUnblock = async (blockedUserId: number) => {
     try {
-      const res = await api.delete(`/users/${id}/block`);
+      const res = await api.delete(`/users/block/${blockedUserId}`);
       if (res.data.success) {
-        toast('User unblocked successfully', 'success');
-        setBlockedUsers((prev) => prev.filter((u) => u.id !== id));
+        toast('User unblocked', 'info');
+        setBlockedUsers(blockedUsers.filter((u) => u.id !== blockedUserId));
       }
-    } catch (e) {
+    } catch (err) {
       toast('Failed to unblock user', 'error');
     }
   };
 
   return (
-    <div className="flex bg-slate-50 min-h-[calc(100vh-4rem)]">
-      <Sidebar type="customer" />
-
-      <main className="flex-grow p-6 space-y-8 max-w-5xl">
+    <div className="bg-slate-50 min-h-[calc(100vh-4rem)] py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto space-y-6">
+        <UserNavTabs />
         <h2 className="text-xl font-bold text-slate-800">Profile & Block List</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -252,7 +251,7 @@ export const CustomerProfile: React.FC = () => {
             </div>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 };

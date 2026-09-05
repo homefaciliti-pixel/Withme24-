@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Sidebar } from '../../components/Layout/Sidebar';
+import { UserNavTabs } from '../../components/Layout/UserNavTabs';
 import { useAuth } from '../../context/AuthContext';
 import { Calendar, Bell } from 'lucide-react';
 import api from '../../services/api';
@@ -53,12 +53,12 @@ export const CustomerDashboard: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex bg-slate-50 min-h-[calc(100vh-4rem)]">
-      <Sidebar type="customer" />
-      
-      <main className="flex-grow p-6 space-y-6 max-w-5xl">
+    <div className="bg-slate-50 min-h-[calc(100vh-4rem)] py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto space-y-6">
+        <UserNavTabs />
+
         {/* Welcome */}
-        <div className="bg-white border border-slate-200 p-6 rounded-xl shadow-sm">
+        <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
           <h2 className="text-xl font-bold text-slate-800">Welcome Back, {user?.name || 'Valued Member'}!</h2>
           <p className="text-xs text-slate-500 mt-1">Manage your companionship bookings, safety parameters, and review verified companions.</p>
         </div>
@@ -128,7 +128,7 @@ export const CustomerDashboard: React.FC = () => {
             </div>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 };
