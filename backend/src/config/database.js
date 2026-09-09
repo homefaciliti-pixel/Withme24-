@@ -12,11 +12,11 @@ const getPassword = () => {
 
 module.exports = {
   development: {
-    username: process.env.DB_USER || process.env.MYSQL_USER || 'root',
-    password: getPassword(),
-    database: process.env.DB_NAME || process.env.MYSQL_DB || process.env.MYSQL_DATABASE || 'withme24',
-    host: process.env.DB_HOST || process.env.MYSQL_HOST || '127.0.0.1',
-    port: parseInt(process.env.DB_PORT || process.env.MYSQL_PORT || '3306', 10),
+    username: process.env.REMOTE_DB_USER || process.env.DB_USER || 'root',
+    password: process.env.REMOTE_DB_PASSWORD !== undefined ? process.env.REMOTE_DB_PASSWORD : getPassword(),
+    database: process.env.REMOTE_DB_NAME || process.env.DB_NAME || 'withme24',
+    host: process.env.REMOTE_DB_HOST || process.env.DB_HOST || '127.0.0.1',
+    port: parseInt(process.env.REMOTE_DB_PORT || process.env.DB_PORT || '3306', 10),
     dialect: 'mysql',
     logging: false,
     define: {

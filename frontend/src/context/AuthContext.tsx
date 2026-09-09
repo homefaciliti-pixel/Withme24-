@@ -6,12 +6,16 @@ export interface UserDto {
   name: string | null;
   email: string | null;
   mobile: string;
-  role: 'CUSTOMER' | 'COMPANION' | 'ADMIN' | 'SUPER_ADMIN' | 'SUPPORT' | 'MODERATOR' | 'FINANCE';
+  role: 'CUSTOMER' | 'PARTNER' | 'COMPANION' | 'ADMIN' | 'SUPER_ADMIN' | 'SUPPORT' | 'MODERATOR' | 'FINANCE';
   profile_photo: string | null;
   is_18_plus_verified: boolean;
   city_id?: number | null;
   gender?: string | null;
   date_of_birth?: string | null;
+  account_status?: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED' | 'BANNED' | 'PENDING' | 'BLOCKED';
+  partner_status?: 'PENDING_VERIFICATION' | 'APPROVED' | 'REJECTED' | 'RESUBMISSION_REQUIRED' | null;
+  kyc_status?: 'PENDING' | 'APPROVED' | 'REJECTED' | 'RESUBMISSION_REQUIRED' | null;
+  rejection_reason?: string | null;
 }
 
 interface AuthContextType {
@@ -20,6 +24,13 @@ interface AuthContextType {
   isAuthenticated: boolean;
   sendOtp: (mobile: string) => Promise<{ success: boolean; message: string; mockOtp?: string }>;
   verifyOtp: (mobile: string, otp: string, role?: 'CUSTOMER' | 'COMPANION') => Promise<{ success: boolean; isNewUser: boolean }>;
+  sendCustomerOtp: (mobile: string) => Promise<{ success: boolean; message: string; mockOtp?: string }>;
+  verifyCustomerOtp: (mobile: string, otp: string) => Promise<{ success: boolean; message?: string; isNewUser?: boolean }>;
+  sendPartnerRegisterOtp: (mobile: string) => Promise<{ success: boolean; message: string; mockOtp?: string }>;
+  registerPartner: (data: any) => Promise<{ success: boolean; message?: string }>;
+  partnerLogin: (mobile: string, password: string) => Promise<{ success: boolean; message?: string }>;
+  sendPartnerForgotPasswordOtp: (mobile: string) => Promise<{ success: boolean; message: string; mockOtp?: string }>;
+  resetPartnerPassword: (mobile: string, otp: string, new_password: string) => Promise<{ success: boolean; message?: string }>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
@@ -86,6 +97,123 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { success: false, isNewUser: false };
   };
 
+  const sendCustomerOtp = async (mobile: string) => {
+    try {
+      const res = await api.post('/auth/customer/send-otp', { mobile });
+      return {
+        success: res.data.success,
+        message: res.data.message,
+        mockOtp: res.data.data?.mockOtp,
+      };
+    } catch (err: any) {
+      return {
+        success: false,
+        message: err.response?.data?.message || 'Failed to send OTP.',
+      };
+    }
+  };
+
+  const verifyCustomerOtp = async (mobile: string, otp: string) => {
+    try {
+      const res = await api.post('/auth/customer/verify-otp', { mobile, otp });
+      if (res.data.success) {
+        const { accessToken, refreshToken, user: userDto, isNewUser } = res.data.data;
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
+        setUser(userDto);
+        return { success: true, message: res.data.message, isNewUser };
+      }
+      return { success: false, message: res.data.message };
+    } catch (err: any) {
+      return {
+        success: false,
+        message: err.response?.data?.message || 'Verification failed.',
+      };
+    }
+  };
+
+  const sendPartnerRegisterOtp = async (mobile: string) => {
+    try {
+      const res = await api.post('/auth/partner/send-otp', { mobile });
+      return {
+        success: res.data.success,
+        message: res.data.message,
+        mockOtp: res.data.data?.mockOtp,
+      };
+    } catch (err: any) {
+      return {
+        success: false,
+        message: err.response?.data?.message || 'Failed to send OTP.',
+      };
+    }
+  };
+
+  const registerPartner = async (data: any) => {
+    try {
+      const res = await api.post('/auth/partner/register', data);
+      if (res.data.success) {
+        const { accessToken, refreshToken, user: userDto } = res.data.data;
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
+        setUser(userDto);
+        return { success: true, message: res.data.message };
+      }
+      return { success: false, message: res.data.message };
+    } catch (err: any) {
+      return {
+        success: false,
+        message: err.response?.data?.message || 'Registration failed.',
+      };
+    }
+  };
+
+  const partnerLogin = async (mobile: string, password: string) => {
+    try {
+      const res = await api.post('/auth/partner/login', { mobile, password });
+      if (res.data.success) {
+        const { accessToken, refreshToken, user: userDto } = res.data.data;
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
+        setUser(userDto);
+        return { success: true, message: res.data.message };
+      }
+      return { success: false, message: res.data.message };
+    } catch (err: any) {
+      return {
+        success: false,
+        message: err.response?.data?.message || 'Partner login failed.',
+      };
+    }
+  };
+
+  const sendPartnerForgotPasswordOtp = async (mobile: string) => {
+    try {
+      const res = await api.post('/auth/partner/forgot-password/send-otp', { mobile });
+      return {
+        success: res.data.success,
+        message: res.data.message,
+        mockOtp: res.data.data?.mockOtp,
+      };
+    } catch (err: any) {
+      return {
+        success: false,
+        message: err.response?.data?.message || 'Failed to send reset OTP.',
+      };
+    }
+  };
+
+  const resetPartnerPassword = async (mobile: string, otp: string, new_password: string) => {
+    try {
+      const res = await api.post('/auth/partner/forgot-password/reset', { mobile, otp, new_password });
+      return { success: res.data.success, message: res.data.message };
+    } catch (err: any) {
+      return {
+        success: false,
+        message: err.response?.data?.message || 'Password reset failed.',
+      };
+    }
+  };
+
   const logout = async () => {
     try {
       const refreshToken = localStorage.getItem('refreshToken');
@@ -109,6 +237,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isAuthenticated: !!user,
         sendOtp,
         verifyOtp,
+        sendCustomerOtp,
+        verifyCustomerOtp,
+        sendPartnerRegisterOtp,
+        registerPartner,
+        partnerLogin,
+        sendPartnerForgotPasswordOtp,
+        resetPartnerPassword,
         logout,
         refreshUser,
       }}

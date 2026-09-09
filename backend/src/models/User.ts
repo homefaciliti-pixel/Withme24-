@@ -5,16 +5,20 @@ export class User extends Model {
   declare public name: string | null;
   declare public email: string | null;
   declare public mobile: string;
+  declare public password_hash: string | null;
   declare public date_of_birth: string | null;
   declare public gender: string | null;
   declare public city_id: number | null;
-  declare public role: 'CUSTOMER' | 'COMPANION' | 'ADMIN' | 'SUPER_ADMIN' | 'SUPPORT' | 'MODERATOR' | 'FINANCE';
+  declare public role: 'CUSTOMER' | 'PARTNER' | 'COMPANION' | 'ADMIN' | 'SUPER_ADMIN' | 'SUPPORT' | 'MODERATOR' | 'FINANCE';
   declare public profile_photo: string | null;
   declare public is_18_plus_verified: boolean;
   declare public is_mobile_verified: boolean;
   declare public email_verified: boolean;
   declare public is_demo: boolean;
-  declare public account_status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED' | 'BANNED' | 'PENDING';
+  declare public account_status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED' | 'BANNED' | 'PENDING' | 'BLOCKED';
+  declare public partner_status: 'PENDING_VERIFICATION' | 'APPROVED' | 'REJECTED' | 'RESUBMISSION_REQUIRED' | null;
+  declare public kyc_status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'RESUBMISSION_REQUIRED' | null;
+  declare public rejection_reason: string | null;
   declare public last_login_at: Date | null;
   declare public readonly created_at: Date;
   declare public readonly updated_at: Date;
@@ -44,6 +48,10 @@ export class User extends Model {
           allowNull: false,
           unique: true,
         },
+        password_hash: {
+          type: DataTypes.STRING(255),
+          allowNull: true,
+        },
         date_of_birth: {
           type: DataTypes.DATEONLY,
           allowNull: true,
@@ -59,6 +67,7 @@ export class User extends Model {
         role: {
           type: DataTypes.ENUM(
             'CUSTOMER',
+            'PARTNER',
             'COMPANION',
             'ADMIN',
             'SUPER_ADMIN',
@@ -99,10 +108,33 @@ export class User extends Model {
             'INACTIVE',
             'SUSPENDED',
             'BANNED',
-            'PENDING'
+            'PENDING',
+            'BLOCKED'
           ),
           allowNull: false,
           defaultValue: 'PENDING',
+        },
+        partner_status: {
+          type: DataTypes.ENUM(
+            'PENDING_VERIFICATION',
+            'APPROVED',
+            'REJECTED',
+            'RESUBMISSION_REQUIRED'
+          ),
+          allowNull: true,
+        },
+        kyc_status: {
+          type: DataTypes.ENUM(
+            'PENDING',
+            'APPROVED',
+            'REJECTED',
+            'RESUBMISSION_REQUIRED'
+          ),
+          allowNull: true,
+        },
+        rejection_reason: {
+          type: DataTypes.TEXT,
+          allowNull: true,
         },
         last_login_at: {
           type: DataTypes.DATE,

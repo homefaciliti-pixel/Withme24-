@@ -44,13 +44,8 @@ export class CompanionController {
       const profileWhere: any = {
         profile_visibility: 'PUBLIC',
         is_available: true,
+        verification_status: 'VERIFIED',
       };
-
-      if (process.env.NODE_ENV === 'production') {
-        profileWhere.verification_status = 'VERIFIED';
-      } else {
-        profileWhere.verification_status = { [Op.in]: ['VERIFIED', 'PENDING', 'UNDER_REVIEW'] };
-      }
 
       if (blockedUserIds.length > 0) {
         profileWhere.user_id = { [Op.notIn]: blockedUserIds };
@@ -60,9 +55,14 @@ export class CompanionController {
         profileWhere.rating = { [Op.gte]: parseFloat(rating as string) };
       }
 
-      // User table filters (City)
+      // User table filters (City, Active Account & Approved Partner Status)
       const userWhere: any = {
         account_status: 'ACTIVE',
+        [Op.or]: [
+          { partner_status: 'APPROVED' },
+          { is_demo: true },
+          { partner_status: null }, // Fallback for legacy verified profiles
+        ],
       };
       if (city_id) {
         userWhere.city_id = parseInt(city_id as string, 10);

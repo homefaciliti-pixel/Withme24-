@@ -16,19 +16,21 @@ export const Navbar: React.FC = () => {
     navigate('/');
   };
 
-  const handleBecomeCompanion = async () => {
-    try {
-      await api.put('/users/profile', { role: 'COMPANION' });
-      await refreshUser();
-      navigate('/companion-dashboard/profile');
-    } catch (err) {
-      console.error('Failed to update role', err);
-    }
+  const handleBecomeCompanion = () => {
+    navigate('/partner/register');
   };
 
   const getDashboardLink = () => {
     if (!user) return '/';
-    if (user.role === 'COMPANION') return '/companion-dashboard';
+    if (user.role === 'COMPANION' || user.role === 'PARTNER') {
+      if (user.partner_status === 'APPROVED' || user.role === 'COMPANION') {
+        return '/companion-dashboard';
+      }
+      return '/partner/application-status';
+    }
+    if (user.role === 'ADMIN' || user.role === 'SUPER_ADMIN' || user.role === 'MODERATOR') {
+      return '/admin';
+    }
     return '/dashboard';
   };
 

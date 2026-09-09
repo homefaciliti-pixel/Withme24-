@@ -12,6 +12,11 @@ import { RoleProtectedRoute } from './components/RoleProtectedRoute';
 // Public Pages
 import { Home } from './pages/Home';
 import { Login } from './pages/Login';
+import { CustomerLogin } from './pages/CustomerLogin';
+import { PartnerLogin } from './pages/PartnerLogin';
+import { PartnerRegister } from './pages/PartnerRegister';
+import { PartnerForgotPassword } from './pages/PartnerForgotPassword';
+import { PartnerApplicationStatus } from './pages/PartnerApplicationStatus';
 import { SafetyCenter } from './pages/SafetyCenter';
 import { CompanionsDirectory } from './pages/CompanionsDirectory';
 import { CompanionDetail } from './pages/CompanionDetail';
@@ -39,6 +44,7 @@ import { CompanionVerification } from './pages/CompanionDashboard/Verification';
 // Admin Pages
 import { AdminDashboard } from './pages/AdminDashboard/Dashboard';
 import { AdminKYCManager } from './pages/AdminDashboard/KYCManager';
+import { PartnerManager } from './pages/AdminDashboard/PartnerManager';
 import { AdminReportsManager } from './pages/AdminDashboard/ReportsManager';
 import { AdminPayoutsManager } from './pages/AdminDashboard/PayoutsManager';
 import { AdminAuditLogs } from './pages/AdminDashboard/AuditLogs';
@@ -53,6 +59,18 @@ const AppContent: React.FC = () => {
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/customer/login" element={<CustomerLogin />} />
+          <Route path="/partner/login" element={<PartnerLogin />} />
+          <Route path="/partner/register" element={<PartnerRegister />} />
+          <Route path="/partner/forgot-password" element={<PartnerForgotPassword />} />
+          <Route
+            path="/partner/application-status"
+            element={
+              <ProtectedRoute>
+                <PartnerApplicationStatus />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/safety" element={<SafetyCenter />} />
           <Route path="/companions" element={<CompanionsDirectory />} />
           <Route path="/find-partner" element={<CompanionsDirectory />} />
@@ -162,6 +180,14 @@ const AppContent: React.FC = () => {
             element={
               <RoleProtectedRoute allowedRoles={['ADMIN', 'SUPER_ADMIN', 'MODERATOR']}>
                 <AdminDashboard />
+              </RoleProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/partners"
+            element={
+              <RoleProtectedRoute allowedRoles={['ADMIN', 'SUPER_ADMIN', 'MODERATOR']}>
+                <PartnerManager />
               </RoleProtectedRoute>
             }
           />

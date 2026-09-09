@@ -56,16 +56,53 @@ app.use('/uploads', (req: Request, res: Response, next: NextFunction) => {
   next();
 }, express.static(uploadDir));
 
-// Welcome Root Endpoint
+// Helper to locate compiled React frontend/dist folder across various server entry locations
+const getFrontendDistPath = (): string | null => {
+  const candidates = [
+    path.resolve(process.cwd(), 'frontend/dist'),
+    path.resolve(process.cwd(), 'dist'),
+    path.resolve(__dirname, '../../frontend/dist'),
+    path.resolve(__dirname, '../dist'),
+  ];
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate) && fs.existsSync(path.join(candidate, 'index.html'))) {
+      return candidate;
+    }
+  }
+  return null;
+};
+
+const frontendDistPath = getFrontendDistPath();
+
+if (frontendDistPath) {
+  app.use(express.static(frontendDistPath));
+}
+
+// Welcome Root Endpoint (Fallback if static frontend index.html is not matched)
 app.get('/', (_req: Request, res: Response) => {
+  const targetDist = getFrontendDistPath();
+  if (targetDist) {
+    return res.sendFile(path.join(targetDist, 'index.html'));
+  }
   res.status(200).json({
     success: true,
     message: 'WithMe24 Backend REST API service is active and running.',
     version: '1.0.0',
-    frontendUrl: 'http://localhost:5173',
-    swaggerDocs: 'http://localhost:5000/api/docs',
-    healthCheck: 'http://localhost:5000/api/health',
+    swaggerDocs: '/api/docs',
+    healthCheck: '/api/health',
   });
+});
+
+// Wildcard route for SPA client-side routing
+app.get('*', (req: Request, res: Response, next: NextFunction) => {
+  if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) {
+    return next();
+  }
+  const targetDist = getFrontendDistPath();
+  if (targetDist) {
+    return res.sendFile(path.join(targetDist, 'index.html'));
+  }
+  next();
 });
 
 // Mount REST router

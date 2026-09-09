@@ -60,7 +60,7 @@ export class KYCVerification extends Model {
         },
         selfie_url: {
           type: DataTypes.STRING(255),
-          allowNull: false,
+          allowNull: true,
         },
         verification_reference: {
           type: DataTypes.STRING(100),

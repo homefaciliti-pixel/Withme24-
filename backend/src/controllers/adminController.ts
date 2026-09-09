@@ -371,4 +371,338 @@ export class AdminController {
       return res.status(500).json({ success: false, message: 'Internal server error' });
     }
   }
+
+  /**
+   * GET /api/admin/partners
+   * Fetch partners for Admin verification table
+   */
+  public static async getPartners(req: AuthenticatedRequest, res: Response) {
+    const { status } = req.query;
+
+    try {
+      const whereCondition: any = {
+        role: ['PARTNER', 'COMPANION'],
+      };
+
+      if (status && typeof status === 'string') {
+        whereCondition.partner_status = status;
+      }
+
+      const partners = await User.findAll({
+        where: whereCondition,
+        attributes: [
+          'id',
+          'name',
+          'email',
+          'mobile',
+          'gender',
+          'date_of_birth',
+          'role',
+          'profile_photo',
+          'account_status',
+          'partner_status',
+          'kyc_status',
+          'rejection_reason',
+          'created_at',
+          'last_login_at',
+        ],
+        include: [
+          { model: CompanionProfile, as: 'companion_profile' },
+          { model: KYCVerification, as: 'kyc_verifications' },
+        ],
+        order: [['created_at', 'DESC']],
+      });
+
+      return res.status(200).json({ success: true, data: partners });
+    } catch (error) {
+      console.error('Get Admin Partners Error:', error);
+      return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+  }
+
+  /**
+   * GET /api/admin/partners/:id
+   */
+  public static async getPartnerDetail(req: AuthenticatedRequest, res: Response) {
+    const partnerId = parseInt(req.params.id, 10);
+
+    try {
+      const partner = await User.findOne({
+        where: { id: partnerId, role: ['PARTNER', 'COMPANION'] },
+        attributes: [
+          'id',
+          'name',
+          'email',
+          'mobile',
+          'gender',
+          'date_of_birth',
+          'role',
+          'profile_photo',
+          'account_status',
+          'partner_status',
+          'kyc_status',
+          'rejection_reason',
+          'created_at',
+          'last_login_at',
+        ],
+        include: [
+          { model: CompanionProfile, as: 'companion_profile' },
+          { model: KYCVerification, as: 'kyc_verifications' },
+        ],
+      });
+
+      if (!partner) {
+        return res.status(404).json({ success: false, message: 'Partner account not found' });
+      }
+
+      return res.status(200).json({ success: true, data: partner });
+    } catch (error) {
+      console.error('Get Partner Detail Error:', error);
+      return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+  }
+
+  /**
+   * POST /api/admin/partners/:id/approve
+   */
+  public static async approvePartner(req: AuthenticatedRequest, res: Response) {
+    const partnerId = parseInt(req.params.id, 10);
+    const admin = req.user!;
+
+    try {
+      const partner = await User.findByPk(partnerId);
+      if (!partner) {
+        return res.status(404).json({ success: false, message: 'Partner account not found' });
+      }
+
+      const profile = await CompanionProfile.findOne({ where: { user_id: partner.id } });
+
+      await sequelize.transaction(async (t) => {
+        await partner.update(
+          {
+            partner_status: 'APPROVED',
+            kyc_status: 'APPROVED',
+            account_status: 'ACTIVE',
+            rejection_reason: null,
+            role: 'COMPANION',
+          },
+          { transaction: t }
+        );
+
+        if (profile) {
+          await profile.update(
+            {
+              verification_status: 'VERIFIED',
+              profile_visibility: 'PUBLIC',
+            },
+            { transaction: t }
+          );
+
+          const existingWallet = await Wallet.findOne({ where: { companion_id: profile.id }, transaction: t });
+          if (!existingWallet) {
+            await Wallet.create({ companion_id: profile.id }, { transaction: t });
+          }
+        }
+
+        const kyc = await KYCVerification.findOne({ where: { user_id: partner.id }, transaction: t });
+        if (kyc) {
+          await kyc.update(
+            {
+              document_status: 'VERIFIED',
+              reviewed_by: admin.id,
+              reviewed_at: new Date(),
+              rejection_reason: null,
+            },
+            { transaction: t }
+          );
+        }
+
+        await AuditService.logAction({
+          adminId: admin.id,
+          action: 'APPROVE_PARTNER',
+          entityType: 'user',
+          entityId: partner.id,
+          newValue: { partner_status: 'APPROVED', kyc_status: 'APPROVED' },
+        });
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: `Partner ${partner.name || partner.mobile} has been approved successfully!`,
+      });
+    } catch (error) {
+      console.error('Approve Partner Error:', error);
+      return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+  }
+
+  /**
+   * POST /api/admin/partners/:id/reject
+   */
+  public static async rejectPartner(req: AuthenticatedRequest, res: Response) {
+    const partnerId = parseInt(req.params.id, 10);
+    const { rejection_reason } = req.body;
+    const admin = req.user!;
+
+    if (!rejection_reason) {
+      return res.status(400).json({ success: false, message: 'Rejection reason is required' });
+    }
+
+    try {
+      const partner = await User.findByPk(partnerId);
+      if (!partner) {
+        return res.status(404).json({ success: false, message: 'Partner account not found' });
+      }
+
+      const profile = await CompanionProfile.findOne({ where: { user_id: partner.id } });
+
+      await sequelize.transaction(async (t) => {
+        await partner.update(
+          {
+            partner_status: 'REJECTED',
+            kyc_status: 'REJECTED',
+            rejection_reason,
+          },
+          { transaction: t }
+        );
+
+        if (profile) {
+          await profile.update(
+            {
+              verification_status: 'REJECTED',
+            },
+            { transaction: t }
+          );
+        }
+
+        const kyc = await KYCVerification.findOne({ where: { user_id: partner.id }, transaction: t });
+        if (kyc) {
+          await kyc.update(
+            {
+              document_status: 'REJECTED',
+              rejection_reason,
+              reviewed_by: admin.id,
+              reviewed_at: new Date(),
+            },
+            { transaction: t }
+          );
+        }
+
+        await AuditService.logAction({
+          adminId: admin.id,
+          action: 'REJECT_PARTNER',
+          entityType: 'user',
+          entityId: partner.id,
+          newValue: { partner_status: 'REJECTED', rejection_reason },
+        });
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: `Partner ${partner.name || partner.mobile} rejected.`,
+      });
+    } catch (error) {
+      console.error('Reject Partner Error:', error);
+      return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+  }
+
+  /**
+   * POST /api/admin/partners/:id/request-resubmission
+   */
+  public static async requestPartnerResubmission(req: AuthenticatedRequest, res: Response) {
+    const partnerId = parseInt(req.params.id, 10);
+    const { rejection_reason } = req.body;
+    const admin = req.user!;
+
+    if (!rejection_reason) {
+      return res.status(400).json({ success: false, message: 'Resubmission reason/instructions are required' });
+    }
+
+    try {
+      const partner = await User.findByPk(partnerId);
+      if (!partner) {
+        return res.status(404).json({ success: false, message: 'Partner account not found' });
+      }
+
+      await sequelize.transaction(async (t) => {
+        await partner.update(
+          {
+            partner_status: 'RESUBMISSION_REQUIRED',
+            kyc_status: 'RESUBMISSION_REQUIRED',
+            rejection_reason,
+          },
+          { transaction: t }
+        );
+
+        const kyc = await KYCVerification.findOne({ where: { user_id: partner.id }, transaction: t });
+        if (kyc) {
+          await kyc.update(
+            {
+              document_status: 'RESUBMISSION_REQUIRED',
+              rejection_reason,
+              reviewed_by: admin.id,
+              reviewed_at: new Date(),
+            },
+            { transaction: t }
+          );
+        }
+
+        await AuditService.logAction({
+          adminId: admin.id,
+          action: 'RESUBMISSION_REQUEST_PARTNER',
+          entityType: 'user',
+          entityId: partner.id,
+          newValue: { partner_status: 'RESUBMISSION_REQUIRED', rejection_reason },
+        });
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: `Resubmission requested from partner ${partner.name || partner.mobile}.`,
+      });
+    } catch (error) {
+      console.error('Request Partner Resubmission Error:', error);
+      return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+  }
+
+  /**
+   * POST /api/admin/partners/:id/status
+   */
+  public static async updatePartnerAccountStatus(req: AuthenticatedRequest, res: Response) {
+    const partnerId = parseInt(req.params.id, 10);
+    const { account_status } = req.body; // ACTIVE, SUSPENDED, BLOCKED
+    const admin = req.user!;
+
+    if (!account_status || !['ACTIVE', 'SUSPENDED', 'BLOCKED', 'INACTIVE'].includes(account_status)) {
+      return res.status(400).json({ success: false, message: 'Valid account status required' });
+    }
+
+    try {
+      const partner = await User.findByPk(partnerId);
+      if (!partner) {
+        return res.status(404).json({ success: false, message: 'Partner account not found' });
+      }
+
+      await partner.update({ account_status });
+
+      await AuditService.logAction({
+        adminId: admin.id,
+        action: `UPDATE_PARTNER_STATUS_${account_status}`,
+        entityType: 'user',
+        entityId: partner.id,
+        newValue: { account_status },
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: `Partner account status updated to ${account_status}.`,
+      });
+    } catch (error) {
+      console.error('Update Partner Status Error:', error);
+      return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+  }
 }
+

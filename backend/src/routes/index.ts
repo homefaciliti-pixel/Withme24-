@@ -77,7 +77,7 @@ router.use(swaggerRouter);
 router.get('/cities', apiLimiter, MetadataController.getCities);
 router.get('/activities', apiLimiter, MetadataController.getActivities);
 
-router.post('/upload', authenticate, uploadLimiter, upload.single('file'), async (req: AuthenticatedRequest, res: Response) => {
+router.post('/upload', optionalAuthenticate, uploadLimiter, upload.single('file'), async (req: AuthenticatedRequest, res: Response) => {
   try {
     if (!req.file) {
       res.status(400).json({ success: false, message: 'No file uploaded' });
@@ -107,8 +107,21 @@ router.post('/upload', authenticate, uploadLimiter, upload.single('file'), async
 // ==========================================
 // 2. AUTHENTICATION
 // ==========================================
+// Legacy / Universal Auth
 router.post('/auth/send-otp', otpLimiter, validate(sendOtpSchema), AuthController.sendOtp);
 router.post('/auth/verify-otp', loginLimiter, validate(verifyOtpSchema), AuthController.verifyOtp);
+
+// Customer Dedicated OTP Auth
+router.post('/auth/customer/send-otp', otpLimiter, AuthController.sendCustomerOtp);
+router.post('/auth/customer/verify-otp', loginLimiter, AuthController.verifyCustomerOtp);
+
+// Partner Dedicated Auth (Password + Registration)
+router.post('/auth/partner/send-otp', otpLimiter, AuthController.sendPartnerRegisterOtp);
+router.post('/auth/partner/register', loginLimiter, AuthController.registerPartner);
+router.post('/auth/partner/login', loginLimiter, AuthController.partnerLogin);
+router.post('/auth/partner/forgot-password/send-otp', otpLimiter, AuthController.sendPartnerForgotPasswordOtp);
+router.post('/auth/partner/forgot-password/reset', loginLimiter, AuthController.resetPartnerPassword);
+
 router.post('/auth/refresh-token', apiLimiter, AuthController.refreshToken);
 router.post('/auth/logout', apiLimiter, AuthController.logout);
 router.get('/auth/me', authenticate, AuthController.me);
@@ -188,6 +201,14 @@ const moderatorRoles = authorize(['ADMIN', 'SUPER_ADMIN', 'MODERATOR', 'SUPPORT'
 const financeRoles = authorize(['ADMIN', 'SUPER_ADMIN', 'FINANCE']);
 
 router.get('/admin/analytics', authenticate, moderatorRoles, AdminController.getAnalytics);
+
+// Partner verification tasks
+router.get('/admin/partners', authenticate, moderatorRoles, AdminController.getPartners);
+router.get('/admin/partners/:id', authenticate, moderatorRoles, AdminController.getPartnerDetail);
+router.post('/admin/partners/:id/approve', authenticate, adminRoles, AdminController.approvePartner);
+router.post('/admin/partners/:id/reject', authenticate, adminRoles, AdminController.rejectPartner);
+router.post('/admin/partners/:id/request-resubmission', authenticate, adminRoles, AdminController.requestPartnerResubmission);
+router.post('/admin/partners/:id/status', authenticate, adminRoles, AdminController.updatePartnerAccountStatus);
 
 // KYC approval tasks
 router.get('/admin/kyc', authenticate, moderatorRoles, AdminController.getPendingKYCs);
