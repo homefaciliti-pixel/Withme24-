@@ -9,10 +9,13 @@ import { LocalStorageService } from './services/storage';
 
 const app = express();
 
+// Trust reverse proxies (Render, Hostinger, Cloudflare) for IP and Protocol resolution
+app.set('trust proxy', 1);
+
 // Enable CORS
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || '*',
+    origin: '*',
     credentials: true,
   })
 );

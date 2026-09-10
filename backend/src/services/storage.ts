@@ -12,18 +12,32 @@ export class LocalStorageService implements StorageService {
   private uploadDir = path.resolve(__dirname, '../../uploads');
 
   constructor() {
-    if (!fs.existsSync(this.uploadDir)) {
-      fs.mkdirSync(this.uploadDir, { recursive: true });
+    try {
+      if (!fs.existsSync(this.uploadDir)) {
+        fs.mkdirSync(this.uploadDir, { recursive: true });
+      }
+    } catch (e) {
+      console.warn('[StorageService] uploadDir creation notice:', e);
     }
   }
 
   async uploadFile(file: Express.Multer.File): Promise<string> {
-    const fileExt = path.extname(file.originalname);
-    const fileName = `${crypto.randomUUID()}${fileExt}`;
-    const filePath = path.join(this.uploadDir, fileName);
-    
-    fs.writeFileSync(filePath, file.buffer);
-    return `/uploads/${fileName}`;
+    try {
+      if (!fs.existsSync(this.uploadDir)) {
+        fs.mkdirSync(this.uploadDir, { recursive: true });
+      }
+      const fileExt = path.extname(file.originalname || '.jpg') || '.jpg';
+      const fileName = `${crypto.randomUUID()}${fileExt}`;
+      const filePath = path.join(this.uploadDir, fileName);
+      
+      fs.writeFileSync(filePath, file.buffer);
+      return `/uploads/${fileName}`;
+    } catch (err: any) {
+      console.error('[StorageService] Local disk write fallback to base64:', err.message);
+      const mime = file.mimetype || 'image/jpeg';
+      const base64 = file.buffer.toString('base64');
+      return `data:${mime};base64,${base64}`;
+    }
   }
 
   async getSignedUrl(fileUrl: string): Promise<string> {

@@ -85,8 +85,13 @@ router.post('/upload', optionalAuthenticate, uploadLimiter, upload.single('file'
     }
     const storageService = getStorageService();
     const fileUrl = await storageService.uploadFile(req.file);
-    const backendUrl = `http://localhost:${process.env.PORT || 5000}`;
-    const fullUrl = `${backendUrl}${fileUrl}`;
+    
+    let fullUrl = fileUrl;
+    if (!fileUrl.startsWith('data:')) {
+      const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'https';
+      const host = req.get('host') || `localhost:${process.env.PORT || 5000}`;
+      fullUrl = `${protocol}://${host}${fileUrl}`;
+    }
 
     res.status(200).json({
       success: true,
