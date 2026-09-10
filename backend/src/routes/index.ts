@@ -120,6 +120,22 @@ router.post('/auth/verify-otp', loginLimiter, validate(verifyOtpSchema), AuthCon
 router.post('/auth/customer/send-otp', otpLimiter, AuthController.sendCustomerOtp);
 router.post('/auth/customer/verify-otp', loginLimiter, AuthController.verifyCustomerOtp);
 
+// Friendly GET guidance handlers if opened in browser or Postman GET method
+const otpGetGuidance = (_req: any, res: any) => {
+  return res.status(405).json({
+    success: false,
+    message: 'HTTP GET is not supported for OTP dispatch. Please use HTTP POST method with a JSON body containing your mobile number.',
+    usage: {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: { mobile: '+919876543210' },
+    },
+  });
+};
+router.get('/auth/send-otp', otpGetGuidance);
+router.get('/auth/customer/send-otp', otpGetGuidance);
+router.get('/auth/partner/send-otp', otpGetGuidance);
+
 // Partner Dedicated Auth (Password + Registration)
 router.post('/auth/partner/send-otp', otpLimiter, AuthController.sendPartnerRegisterOtp);
 router.post('/auth/partner/register', loginLimiter, AuthController.registerPartner);
