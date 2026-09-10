@@ -83,21 +83,24 @@ export class NotificationService {
    * Integration point for SMS Providers (e.g. DLT, Fast2SMS, MSG91, Twilio)
    */
   public static async sendSmsGateway(mobile: string, message: string, otpCode?: string): Promise<boolean> {
-    const provider = process.env.SMS_PROVIDER || 'dlt';
+    const provider = (process.env.SMS_PROVIDER || 'jio').toLowerCase();
 
     const entityId = process.env.SMS_ENTITY_ID || '1201173444411453897';
     const dltTemplateId = process.env.SMS_DLT_TEMPLATE_ID || '1207173589889308632';
     const senderId = process.env.SMS_SENDER_ID || 'HMFCLI';
-    const templateText = process.env.SMS_TEMPLATE_TEXT || 'Your OTP for registering on Superhome is: {#var#} This code is valid for the next 10 minutes.';
+    const templateText = process.env.SMS_TEMPLATE_TEXT || 'Your OTP for registering on Superhome is: {#var#}. This code is valid for the next 10 minutes. Thank You, Super Home';
 
-    // Replace placeholder for Indian DLT Template
+    // Replace placeholder for Indian Jio DLT Template
     let formattedMessage = message;
     if (otpCode) {
-      formattedMessage = templateText.replace('{#var#}', otpCode).replace('{var}', otpCode).replace('{{otp}}', otpCode);
+      formattedMessage = templateText
+        .replace('{#var#}', otpCode)
+        .replace('{var}', otpCode)
+        .replace('{{otp}}', otpCode);
     }
 
-    console.log(`[DLT-SMS-DISPATCH] Target: ${mobile} | SenderID: ${senderId} | EntityID: ${entityId} | TemplateID: ${dltTemplateId}`);
-    console.log(`[DLT-SMS-PAYLOAD] Content: "${formattedMessage}"`);
+    console.log(`[JIO-DLT-SMS-DISPATCH] Target: ${mobile} | SenderID: ${senderId} | EntityID: ${entityId} | TemplateID: ${dltTemplateId}`);
+    console.log(`[JIO-DLT-SMS-PAYLOAD] Content: "${formattedMessage}"`);
 
     if (provider === 'mock') {
       console.log(`[SMS-MOCK] Sent to ${mobile}: ${formattedMessage}`);
@@ -106,8 +109,8 @@ export class NotificationService {
 
     try {
       const cleanMobile = mobile.replace(/\D/g, '').slice(-10);
-      const apiKey = process.env.SMS_API_KEY || '';
-      const apiUrl = process.env.SMS_API_URL || 'https://www.fast2sms.com/dev/bulkV2';
+      const apiKey = process.env.SMS_API_KEY || process.env.JIO_API_KEY || '';
+      const apiUrl = process.env.SMS_API_URL || 'https://trueconnect.jio.com/api/v2/SendSMS';
 
       if (apiKey && apiKey !== 'mockSmsApiKey123') {
         const response = await fetch(apiUrl, {
@@ -117,24 +120,29 @@ export class NotificationService {
             'authorization': apiKey,
           },
           body: JSON.stringify({
+            username: process.env.JIO_USERNAME || apiKey,
+            password: process.env.JIO_PASSWORD || '',
             route: 'dlt',
             sender_id: senderId,
-            message: dltTemplateId,
+            header: senderId,
+            template_id: dltTemplateId,
+            message: formattedMessage,
             variables_values: otpCode || '',
             numbers: cleanMobile,
+            mobile: cleanMobile,
             entity_id: entityId,
           }),
         });
 
-        const resJson: any = await response.json();
-        console.log('[DLT-SMS-RESPONSE]', resJson);
-        return Boolean(resJson && (resJson.return === true || resJson.status === 'success' || resJson.success === true));
+        const resJson: any = await response.json().catch(() => ({ success: response.ok }));
+        console.log('[JIO-DLT-SMS-RESPONSE]', resJson);
+        return Boolean(response.ok && resJson && (resJson.return === true || resJson.status === 'success' || resJson.success === true || resJson.code === 200 || resJson.code === '200'));
       } else {
-        console.log(`[DLT-SMS-READY] DLT SMS Compiled & Prepared for Sender: ${senderId}.`);
+        console.log(`[JIO-DLT-SMS-READY] Jio DLT SMS Compiled & Prepared for Sender: ${senderId} (Entity: ${entityId}, Template: ${dltTemplateId}).`);
         return true;
       }
     } catch (err) {
-      console.error('[DLT-SMS-ERROR] Failed to send SMS:', err);
+      console.error('[JIO-DLT-SMS-ERROR] Failed to send SMS:', err);
       return false;
     }
   }
