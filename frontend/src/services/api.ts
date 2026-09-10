@@ -1,8 +1,19 @@
 import axios from 'axios';
 
-// Instantiate Axios with root prefix
+const getBaseUrl = () => {
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  // If frontend is deployed on Vercel, Netlify, or Hostinger separate domain, fallback to live Render backend
+  if (typeof window !== 'undefined' && !window.location.hostname.includes('onrender.com') && !window.location.hostname.includes('localhost')) {
+    return 'https://withme24-1.onrender.com/api';
+  }
+  return '/api';
+};
+
+// Instantiate Axios with root prefix or live backend URL
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: getBaseUrl(),
   headers: {
     'Content-Type': 'application/json',
   },
