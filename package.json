@@ -2,8 +2,12 @@
   "name": "withme24-root",
   "version": "1.0.0",
   "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
   "scripts": {
-    "build": "cd frontend && npm install && npm run build && cd ../backend && npm install && npm run build",
+    "build": "npm run build --prefix frontend && npm run build --prefix backend",
     "start": "node app.js"
   }
 }
