@@ -365,15 +365,6 @@ export class AuthController {
     }
 
     try {
-      const existingUser = await User.findOne({ where: { mobile } }).catch(() => null);
-      if (existingUser && (existingUser.role === 'PARTNER' || existingUser.role === 'COMPANION')) {
-        return res.status(400).json({
-          success: false,
-          message: 'This mobile number is registered as a Partner account. Please use Partner Login below.',
-          error: { code: 'PARTNER_ACCOUNT_DETECTED' },
-        });
-      }
-
       const otpCode = process.env.USE_STATIC_OTP === 'true' ? (process.env.MOCK_OTP || '1234') : Math.floor(1000 + Math.random() * 9000).toString();
       const salt = await bcrypt.genSalt(10);
       const otpHash = await bcrypt.hash(otpCode, salt);
@@ -465,15 +456,7 @@ export class AuthController {
       let user: any = await User.findOne({ where: { mobile } }).catch(() => null);
       let isNewUser = false;
 
-      if (user) {
-        if (user.role === 'PARTNER' || user.role === 'COMPANION') {
-          return res.status(400).json({
-            success: false,
-            message: 'This mobile number is registered as a Partner account. Please log in using Partner Login.',
-            error: { code: 'PARTNER_ACCOUNT_DETECTED' },
-          });
-        }
-      } else {
+      if (!user) {
         isNewUser = true;
         try {
           user = await User.create({
