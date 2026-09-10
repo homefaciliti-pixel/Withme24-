@@ -13,7 +13,7 @@ export const sendOtpSchema = z.object({
 export const verifyOtpSchema = z.object({
   body: z.object({
     mobile: z.string(),
-    otp: z.string().length(6, 'OTP must be exactly 6 digits').regex(/^\d+$/, 'OTP must contain only numbers'),
+    otp: z.string().min(4, 'OTP must be at least 4 digits').max(6, 'OTP cannot exceed 6 digits').regex(/^\d+$/, 'OTP must contain only numbers'),
     role: z.enum(['CUSTOMER', 'COMPANION']).optional(),
     device: z.string().optional(),
     user_agent: z.string().optional(),

@@ -452,7 +452,7 @@ export const PartnerRegister: React.FC = () => {
           <form onSubmit={handleFinalSubmit} className="space-y-4">
             <div className="text-center space-y-1">
               <h3 className="text-xl font-black text-slate-900">Step 4: Verify Phone Number</h3>
-              <p className="text-xs text-slate-500">Enter the 6-digit OTP sent to {mobile}.</p>
+              <p className="text-xs text-slate-500">Enter the 4-digit OTP sent to {mobile}.</p>
             </div>
 
             <div className="space-y-2">
@@ -460,8 +460,8 @@ export const PartnerRegister: React.FC = () => {
                 <Lock size={16} className="absolute left-3.5 top-3.5 text-slate-400" />
                 <input
                   type="text"
-                  maxLength={6}
-                  placeholder="123456"
+                  maxLength={4}
+                  placeholder="1234"
                   required
                   value={otp}
                   onChange={(e) => setOtp(e.target.value)}

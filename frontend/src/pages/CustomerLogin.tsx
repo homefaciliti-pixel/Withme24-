@@ -118,7 +118,7 @@ export const CustomerLogin: React.FC = () => {
           <form onSubmit={handleVerifyOtp} className="space-y-4">
             <div className="space-y-2">
               <div className="flex justify-between items-center">
-                <label className="text-xs font-bold text-slate-700">6-Digit Verification Code</label>
+                <label className="text-xs font-bold text-slate-700">4-Digit Verification Code</label>
                 <button
                   type="button"
                   onClick={() => setStep(1)}
@@ -131,8 +131,8 @@ export const CustomerLogin: React.FC = () => {
                 <Lock size={16} className="absolute left-3.5 top-3.5 text-slate-400" />
                 <input
                   type="text"
-                  maxLength={6}
-                  placeholder="123456"
+                  maxLength={4}
+                  placeholder="1234"
                   required
                   value={otp}
                   onChange={(e) => setOtp(e.target.value)}

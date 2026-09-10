@@ -39,7 +39,7 @@ export class AuthController {
     }
 
     try {
-      const otpCode = process.env.USE_STATIC_OTP === 'true' ? (process.env.MOCK_OTP || '123456') : Math.floor(100000 + Math.random() * 900000).toString();
+      const otpCode = process.env.USE_STATIC_OTP === 'true' ? (process.env.MOCK_OTP || '1234') : Math.floor(1000 + Math.random() * 9000).toString();
       const salt = await bcrypt.genSalt(10);
       const otpHash = await bcrypt.hash(otpCode, salt);
       const expiry = new Date(Date.now() + 10 * 60 * 1000); // 10 mins expiry
@@ -374,7 +374,7 @@ export class AuthController {
         });
       }
 
-      const otpCode = process.env.USE_STATIC_OTP === 'true' ? (process.env.MOCK_OTP || '123456') : Math.floor(100000 + Math.random() * 900000).toString();
+      const otpCode = process.env.USE_STATIC_OTP === 'true' ? (process.env.MOCK_OTP || '1234') : Math.floor(1000 + Math.random() * 9000).toString();
       const salt = await bcrypt.genSalt(10);
       const otpHash = await bcrypt.hash(otpCode, salt);
       const expiry = new Date(Date.now() + 10 * 60 * 1000); // 10 mins expiry
@@ -574,7 +574,7 @@ export class AuthController {
         });
       }
 
-      const otpCode = process.env.USE_STATIC_OTP === 'true' ? (process.env.MOCK_OTP || '123456') : Math.floor(100000 + Math.random() * 900000).toString();
+      const otpCode = process.env.USE_STATIC_OTP === 'true' ? (process.env.MOCK_OTP || '1234') : Math.floor(1000 + Math.random() * 9000).toString();
       const salt = await bcrypt.genSalt(10);
       const otpHash = await bcrypt.hash(otpCode, salt);
       const expiry = new Date(Date.now() + 10 * 60 * 1000);
@@ -891,7 +891,7 @@ export class AuthController {
         return res.status(400).json({ success: false, message: 'No partner account associated with this mobile number.' });
       }
 
-      const otpCode = process.env.USE_STATIC_OTP === 'true' ? (process.env.MOCK_OTP || '123456') : Math.floor(100000 + Math.random() * 900000).toString();
+      const otpCode = process.env.USE_STATIC_OTP === 'true' ? (process.env.MOCK_OTP || '1234') : Math.floor(1000 + Math.random() * 9000).toString();
       const salt = await bcrypt.genSalt(10);
       const otpHash = await bcrypt.hash(otpCode, salt);
       const expiry = new Date(Date.now() + 10 * 60 * 1000);
