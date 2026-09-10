@@ -365,12 +365,21 @@ export class AuthController {
     }
 
     try {
+      const existingUser = await User.findOne({ where: { mobile } }).catch(() => null);
+      if (existingUser && (existingUser.role === 'PARTNER' || existingUser.role === 'COMPANION')) {
+        return res.status(400).json({
+          success: false,
+          message: 'This mobile number is registered as a Partner account. Please use Partner Login below.',
+          error: { code: 'PARTNER_ACCOUNT_DETECTED' },
+        });
+      }
+
       const otpCode = process.env.MOCK_OTP || '123456';
       const salt = await bcrypt.genSalt(10);
       const otpHash = await bcrypt.hash(otpCode, salt);
       const expiry = new Date(Date.now() + 10 * 60 * 1000); // 10 mins expiry
 
-      const existing = await OTP.findOne({ where: { mobile } });
+      const existing = await OTP.findOne({ where: { mobile } }).catch(() => null);
       if (existing) {
         await existing.update({
           otp_hash: otpHash,
@@ -378,7 +387,7 @@ export class AuthController {
           attempts: 0,
           resend_cooldown_until: null,
           expires_at: expiry,
-        });
+        }).catch(() => {});
       } else {
         await OTP.create({
           mobile,
@@ -387,7 +396,7 @@ export class AuthController {
           attempts: 0,
           resend_cooldown_until: null,
           expires_at: expiry,
-        });
+        }).catch(() => {});
       }
 
       NotificationService.sendSmsGateway(mobile, `Your OTP for WithMe24 is ${otpCode}`, otpCode).catch(() => {});

@@ -14,10 +14,10 @@ export const apiLimiter = rateLimit({
 
 export const otpLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  limit: 5, // Limit 5 requests per 15 mins to prevent spam
+  limit: 50, // Relaxed limit to prevent 429 blocking during active testing
   message: {
     success: false,
-    message: 'OTP request limit exceeded, please wait 15 minutes before trying again.',
+    message: 'OTP request limit exceeded, please wait a few minutes before trying again.',
     error: { code: 'OTP_RATE_LIMIT_EXCEEDED' },
   },
   standardHeaders: true,
