@@ -89,13 +89,22 @@ const getFrontendDistPath = (): string | null => {
 const frontendDistPath = getFrontendDistPath();
 
 if (frontendDistPath) {
-  app.use(express.static(frontendDistPath));
+  app.use(express.static(frontendDistPath, {
+    setHeaders: (res, filePath) => {
+      if (filePath.endsWith('.html')) {
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
+      }
+    }
+  }));
 }
 
 // Welcome Root Endpoint (Fallback if static frontend index.html is not matched)
 app.get('/', (_req: Request, res: Response) => {
   const targetDist = getFrontendDistPath();
   if (targetDist) {
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     return res.sendFile(path.join(targetDist, 'index.html'));
   }
   res.status(200).json({
@@ -114,6 +123,7 @@ app.get('*', (req: Request, res: Response, next: NextFunction) => {
   }
   const targetDist = getFrontendDistPath();
   if (targetDist) {
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     return res.sendFile(path.join(targetDist, 'index.html'));
   }
   next();
