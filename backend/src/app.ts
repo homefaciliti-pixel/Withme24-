@@ -28,7 +28,18 @@ app.use(morgan('dev'));
 
 // Body Parsers
 app.use(express.json());
+app.use(express.text({ type: ['text/plain', 'text/json', 'application/json', '*/*'] }));
 app.use(express.urlencoded({ extended: true }));
+
+// Automatic JSON parse fallback for Postman requests sent with Text format
+app.use((req: Request, _res: Response, next: NextFunction) => {
+  if (typeof req.body === 'string') {
+    try {
+      req.body = JSON.parse(req.body);
+    } catch (e) {}
+  }
+  next();
+});
 
 // Create uploads directory if it doesn't exist
 const uploadDir = path.resolve(__dirname, '../uploads');
