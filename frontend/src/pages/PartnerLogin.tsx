@@ -39,26 +39,25 @@ export const PartnerLogin: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-5rem)] flex items-center justify-center p-4 bg-gradient-to-br from-slate-900 via-purple-950 to-slate-900 relative overflow-hidden">
-      {/* Decorative Blur Blobs */}
-      <div className="absolute -top-40 -left-40 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-[calc(100vh-5rem)] flex items-center justify-center p-4 bg-gradient-to-br from-slate-50 via-purple-50/40 to-indigo-50/30 relative overflow-hidden">
+      {/* Soft Ambient Light Glows */}
+      <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-purple-300/20 blur-3xl rounded-full pointer-events-none" />
 
-      <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-8 max-w-md w-full space-y-6 relative z-10 animate-in fade-in zoom-in-95 duration-300">
+      <div className="bg-white rounded-3xl shadow-xl shadow-purple-900/5 border border-purple-100/80 p-8 max-w-md w-full space-y-6 relative z-10">
         <div className="flex items-center justify-between">
           <Link to="/login" className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-purple-700 transition-colors">
-            <ArrowLeft size={14} /> Back to choices
+            <ArrowLeft size={14} /> Back to options
           </Link>
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold text-purple-700 bg-purple-50 px-3 py-1.5 rounded-full border border-purple-100/80 shadow-sm">
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-black text-purple-700 bg-purple-100/60 px-3 py-1.5 rounded-full border border-purple-200/60 shadow-2xs">
             <ShieldCheck size={14} className="text-purple-600" /> Partner Portal
           </span>
         </div>
 
         <div className="text-center space-y-2">
-          <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto shadow-md shadow-purple-500/20 text-white">
+          <div className="w-12 h-12 bg-gradient-to-tr from-purple-600 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-purple-600/20 text-white">
             <Sparkles size={22} />
           </div>
-          <h2 className="text-2xl font-black tracking-tight text-slate-900">Partner Sign In</h2>
+          <h2 className="text-2xl font-black text-slate-900 tracking-tight">Partner Sign In</h2>
           <p className="text-xs font-medium text-slate-500 max-w-xs mx-auto">
             Access your companion dashboard, earnings, and booking requests.
           </p>
@@ -75,7 +74,7 @@ export const PartnerLogin: React.FC = () => {
                 required
                 value={mobile}
                 onChange={(e) => setMobile(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 focus:border-purple-600 focus:bg-white rounded-2xl py-3.5 pl-11 pr-4 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-4 focus:ring-purple-500/10 transition-all shadow-inner"
+                className="w-full bg-slate-50/80 border border-slate-200 focus:border-purple-600 focus:bg-white rounded-2xl py-3.5 pl-11 pr-4 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-4 focus:ring-purple-500/10 transition-all shadow-2xs"
               />
             </div>
           </div>
@@ -83,7 +82,7 @@ export const PartnerLogin: React.FC = () => {
           <div className="space-y-1.5">
             <div className="flex justify-between items-center px-1">
               <label className="text-xs font-bold text-slate-700 block">Password</label>
-              <Link to="/partner/forgot-password" className="text-xs text-purple-600 font-extrabold hover:underline">
+              <Link to="/partner/forgot-password" className="text-xs text-purple-700 font-extrabold hover:underline">
                 Forgot Password?
               </Link>
             </div>
@@ -95,7 +94,7 @@ export const PartnerLogin: React.FC = () => {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 focus:border-purple-600 focus:bg-white rounded-2xl py-3.5 pl-11 pr-4 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-4 focus:ring-purple-500/10 transition-all shadow-inner"
+                className="w-full bg-slate-50/80 border border-slate-200 focus:border-purple-600 focus:bg-white rounded-2xl py-3.5 pl-11 pr-4 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-4 focus:ring-purple-500/10 transition-all shadow-2xs"
               />
             </div>
           </div>
@@ -103,7 +102,7 @@ export const PartnerLogin: React.FC = () => {
           <button
             type="submit"
             disabled={loading || !mobile || !password}
-            className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 disabled:opacity-50 text-white font-bold py-3.5 rounded-2xl text-sm shadow-lg shadow-purple-600/25 transition-all transform active:scale-[0.99] flex items-center justify-center gap-2"
+            className="w-full bg-gradient-to-r from-purple-700 via-purple-600 to-indigo-600 hover:from-purple-800 hover:to-indigo-700 disabled:opacity-50 text-white font-extrabold py-3.5 rounded-2xl text-sm shadow-lg shadow-purple-600/20 transition-all transform active:scale-[0.99] flex items-center justify-center gap-2"
           >
             {loading ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -119,7 +118,7 @@ export const PartnerLogin: React.FC = () => {
           <p className="text-xs font-medium text-slate-500">Don't have a partner account yet?</p>
           <Link
             to="/partner/register"
-            className="w-full bg-purple-50 hover:bg-purple-100 text-purple-700 font-extrabold py-3 px-4 rounded-2xl text-xs flex items-center justify-center gap-2 transition-all border border-purple-200 shadow-sm"
+            className="w-full bg-purple-50/80 hover:bg-purple-100 text-purple-700 font-extrabold py-3 px-4 rounded-2xl text-xs flex items-center justify-center gap-2 transition-all border border-purple-200 shadow-2xs"
           >
             <UserPlus size={16} /> Become a Partner (Register)
           </Link>

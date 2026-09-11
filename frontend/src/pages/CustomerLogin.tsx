@@ -25,7 +25,6 @@ export const CustomerLogin: React.FC = () => {
 
   const from = (location.state as any)?.from?.pathname || '/dashboard';
 
-  // Countdown timer for Resend OTP
   useEffect(() => {
     let interval: any = null;
     if (resendTimer > 0) {
@@ -76,7 +75,6 @@ export const CustomerLogin: React.FC = () => {
       return;
     }
 
-    // Support multi-digit paste into single input
     if (cleanValue.length > 1) {
       const pasted = cleanValue.slice(0, 4).split('');
       const updated = ['', '', '', ''];
@@ -93,7 +91,6 @@ export const CustomerLogin: React.FC = () => {
     updated[index] = cleanValue.slice(-1);
     setOtpDigits(updated);
 
-    // Auto-advance focus to next input
     if (index < 3 && cleanValue) {
       inputRefs[index + 1].current?.focus();
     }
@@ -133,26 +130,25 @@ export const CustomerLogin: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-5rem)] flex items-center justify-center p-4 bg-gradient-to-br from-slate-900 via-purple-950 to-slate-900 relative overflow-hidden">
-      {/* Glow decorative blobs */}
-      <div className="absolute -top-40 -left-40 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-[calc(100vh-5rem)] flex items-center justify-center p-4 bg-gradient-to-br from-slate-50 via-purple-50/40 to-indigo-50/30 relative overflow-hidden">
+      {/* Soft Ambient Light Glows */}
+      <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-purple-300/20 blur-3xl rounded-full pointer-events-none" />
 
-      <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-8 max-w-md w-full space-y-6 relative z-10 animate-in fade-in zoom-in-95 duration-300">
+      <div className="bg-white rounded-3xl shadow-xl shadow-purple-900/5 border border-purple-100/80 p-8 max-w-md w-full space-y-6 relative z-10">
         <div className="flex items-center justify-between">
           <Link to="/login" className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-purple-700 transition-colors">
-            <ArrowLeft size={14} /> Back to choices
+            <ArrowLeft size={14} /> Back to options
           </Link>
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold text-purple-700 bg-purple-50 px-3 py-1.5 rounded-full border border-purple-100/80 shadow-sm">
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-black text-purple-700 bg-purple-100/60 px-3 py-1.5 rounded-full border border-purple-200/60 shadow-2xs">
             <ShieldCheck size={14} className="text-purple-600" /> Customer Portal
           </span>
         </div>
 
         <div className="text-center space-y-2">
-          <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto shadow-md shadow-purple-500/20 text-white">
+          <div className="w-12 h-12 bg-gradient-to-tr from-purple-600 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-purple-600/20 text-white">
             <Sparkles size={22} />
           </div>
-          <h2 className="text-2xl font-black tracking-tight text-slate-900">Customer Access</h2>
+          <h2 className="text-2xl font-black text-slate-900 tracking-tight">Customer Access</h2>
           <p className="text-xs font-medium text-slate-500 max-w-xs mx-auto">
             {step === 1 ? 'Enter your mobile number to receive a 4-digit verification code.' : `Enter the 4-digit code sent to ${mobile}`}
           </p>
@@ -170,7 +166,7 @@ export const CustomerLogin: React.FC = () => {
                   required
                   value={mobile}
                   onChange={(e) => setMobile(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 focus:border-purple-600 focus:bg-white rounded-2xl py-3.5 pl-11 pr-4 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-4 focus:ring-purple-500/10 transition-all shadow-inner"
+                  className="w-full bg-slate-50/80 border border-slate-200 focus:border-purple-600 focus:bg-white rounded-2xl py-3.5 pl-11 pr-4 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-4 focus:ring-purple-500/10 transition-all shadow-2xs"
                 />
               </div>
               <p className="text-[11px] text-slate-400 font-medium pl-1">No password needed. Account created automatically on verification.</p>
@@ -179,7 +175,7 @@ export const CustomerLogin: React.FC = () => {
             <button
               type="submit"
               disabled={loading || !mobile.trim()}
-              className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 disabled:opacity-50 text-white font-bold py-3.5 rounded-2xl text-sm shadow-lg shadow-purple-600/25 transition-all transform active:scale-[0.99] flex items-center justify-center gap-2"
+              className="w-full bg-gradient-to-r from-purple-700 via-purple-600 to-indigo-600 hover:from-purple-800 hover:to-indigo-700 disabled:opacity-50 text-white font-extrabold py-3.5 rounded-2xl text-sm shadow-lg shadow-purple-600/20 transition-all transform active:scale-[0.99] flex items-center justify-center gap-2"
             >
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -198,7 +194,7 @@ export const CustomerLogin: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="text-purple-600 hover:text-purple-800 text-xs font-bold underline"
+                  className="text-purple-700 hover:text-purple-900 text-xs font-extrabold underline"
                 >
                   Change ({mobile})
                 </button>
@@ -216,7 +212,7 @@ export const CustomerLogin: React.FC = () => {
                     value={digit}
                     onChange={(e) => handleDigitChange(idx, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(idx, e)}
-                    className="w-14 h-14 bg-slate-50 border-2 border-slate-200 focus:border-purple-600 focus:bg-white rounded-2xl text-center text-xl font-black text-slate-900 focus:outline-none focus:ring-4 focus:ring-purple-500/15 transition-all shadow-sm"
+                    className="w-14 h-14 bg-slate-50/80 border-2 border-slate-200 focus:border-purple-600 focus:bg-white rounded-2xl text-center text-xl font-black text-slate-900 focus:outline-none focus:ring-4 focus:ring-purple-500/15 transition-all shadow-2xs"
                   />
                 ))}
               </div>
@@ -230,14 +226,14 @@ export const CustomerLogin: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => handleSendOtp()}
-                  className="font-bold text-purple-700 hover:text-purple-900 inline-flex items-center gap-1 hover:underline"
+                  className="font-extrabold text-purple-700 hover:text-purple-900 inline-flex items-center gap-1 hover:underline"
                 >
                   <RefreshCw size={12} /> Resend OTP
                 </button>
               )}
             </div>
 
-            <div className="bg-purple-50/80 border border-purple-100 rounded-2xl p-3.5 text-xs text-purple-900 flex items-start gap-2.5">
+            <div className="bg-purple-50/90 border border-purple-100 rounded-2xl p-3.5 text-xs text-purple-900 flex items-start gap-2.5 shadow-2xs">
               <CheckCircle2 size={16} className="text-purple-600 shrink-0 mt-0.5" />
               <p className="text-[11px] leading-relaxed text-purple-800 font-medium">
                 Enter the 4-digit code sent via SMS to verify and log in.
@@ -247,7 +243,7 @@ export const CustomerLogin: React.FC = () => {
             <button
               type="submit"
               disabled={loading || otpDigits.join('').length < 4}
-              className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 disabled:opacity-50 text-white font-bold py-3.5 rounded-2xl text-sm shadow-lg shadow-purple-600/25 transition-all transform active:scale-[0.99] flex items-center justify-center gap-2"
+              className="w-full bg-gradient-to-r from-purple-700 via-purple-600 to-indigo-600 hover:from-purple-800 hover:to-indigo-700 disabled:opacity-50 text-white font-extrabold py-3.5 rounded-2xl text-sm shadow-lg shadow-purple-600/20 transition-all transform active:scale-[0.99] flex items-center justify-center gap-2"
             >
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -261,7 +257,7 @@ export const CustomerLogin: React.FC = () => {
         <div className="text-center pt-3 border-t border-slate-100">
           <p className="text-xs text-slate-500 font-medium">
             Are you a Host or Social Companion?{' '}
-            <Link to="/partner/login" className="text-purple-700 font-extrabold hover:underline">
+            <Link to="/partner/login" className="text-purple-700 font-black hover:underline">
               Partner Login
             </Link>
           </p>
