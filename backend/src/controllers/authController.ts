@@ -71,8 +71,8 @@ export class AuthController {
 
       return res.status(200).json({
         success: true,
-        message: `OTP sent successfully. Use ${otpCode} to verify.`,
-        data: { mockOtp: otpCode },
+        message: 'OTP sent successfully to your mobile number.',
+        data: { mobile },
       });
     } catch (error: any) {
       console.error('Send OTP Error:', error);
@@ -394,15 +394,15 @@ export class AuthController {
 
       return res.status(200).json({
         success: true,
-        message: `OTP sent successfully. Use ${otpCode} to verify.`,
-        data: { mockOtp: otpCode },
+        message: 'OTP sent successfully to your mobile number.',
+        data: { mobile },
       });
     } catch (error: any) {
       console.error('Send Customer OTP Error:', error);
       return res.status(200).json({
         success: true,
-        message: 'OTP dispatched. Use 123456 to verify.',
-        data: { mockOtp: '123456' },
+        message: 'OTP sent successfully to your mobile number.',
+        data: { mobile },
       });
     }
   }
@@ -584,8 +584,8 @@ export class AuthController {
 
       return res.status(200).json({
         success: true,
-        message: `Registration OTP sent successfully. Use ${otpCode} to verify.`,
-        data: { mockOtp: otpCode },
+        message: 'Registration OTP sent successfully to your mobile number.',
+        data: { mobile },
       });
     } catch (error) {
       console.error('Send Partner Register OTP Error:', error);
@@ -901,8 +901,8 @@ export class AuthController {
 
       return res.status(200).json({
         success: true,
-        message: `Password reset OTP sent. Use ${otpCode} to verify.`,
-        data: { mockOtp: otpCode },
+        message: 'Password reset OTP sent successfully to your mobile number.',
+        data: { mobile },
       });
     } catch (error) {
       console.error('Send Partner Forgot Password OTP Error:', error);

@@ -100,11 +100,8 @@ export const PartnerRegister: React.FC = () => {
       const res = await sendPartnerRegisterOtp(targetMobile);
       if (res.success) {
         setMobile(targetMobile);
-        toast(res.message, 'info');
-        if (res.mockOtp) {
-          setMockOtpHint(res.mockOtp);
-          setOtp(res.mockOtp);
-        }
+        toast(res.message || 'OTP sent successfully to your mobile number.', 'info');
+        setOtp('');
         setStep(4);
       } else {
         toast(res.message, 'error');
@@ -465,14 +462,9 @@ export const PartnerRegister: React.FC = () => {
                   required
                   value={otp}
                   onChange={(e) => setOtp(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-300 focus:border-purple-500 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none text-center tracking-widest font-black text-lg"
+                  className="w-full bg-slate-50 border border-slate-300 focus:border-purple-600 focus:bg-white rounded-xl py-3.5 pl-10 pr-4 text-center tracking-widest font-black text-xl text-slate-900 focus:outline-none focus:ring-4 focus:ring-purple-500/10 transition-all shadow-inner"
                 />
               </div>
-              {mockOtpHint && (
-                <div className="flex items-center gap-1.5 text-xs text-purple-700 font-medium bg-purple-50 p-2.5 rounded-xl border border-purple-100">
-                  <HelpCircle size={14} className="shrink-0 text-purple-600" /> Demo Registration OTP: <span className="font-bold">{mockOtpHint}</span>
-                </div>
-              )}
             </div>
 
             <div className="bg-purple-50 border border-purple-100 rounded-xl p-4 text-xs text-purple-900 space-y-1">
