@@ -31,7 +31,7 @@ interface ServiceItem {
 const servicesData: ServiceItem[] = [
   {
     id: 'movie-partner',
-    name: 'Movie Partner',
+    name: 'WithMe Movie Partner',
     tagline: 'Never watch a blockbuster alone',
     description: 'Find an enthusiastic cinema companion for movie premieres, film festivals, or IMAX outings.',
     priceStarting: 499,
@@ -40,7 +40,7 @@ const servicesData: ServiceItem[] = [
   },
   {
     id: 'coffee-partner',
-    name: 'Coffee & Cafe Partner',
+    name: 'WithMe Coffee Partner',
     tagline: 'Meaningful conversations over coffee',
     description: 'Connect with engaging social hosts for cafe hopping, casual conversations, or evening tea breaks.',
     priceStarting: 399,
@@ -49,7 +49,7 @@ const servicesData: ServiceItem[] = [
   },
   {
     id: 'shopping-buddy',
-    name: 'Shopping Buddy',
+    name: 'WithMe Shopping Buddy',
     tagline: 'Honest style advice & shopping company',
     description: 'Have a supportive companion assist with fashion shopping, mall visits, or festive gift selections.',
     priceStarting: 599,
@@ -58,7 +58,7 @@ const servicesData: ServiceItem[] = [
   },
   {
     id: 'city-tour',
-    name: 'City Tour & Exploration',
+    name: 'WithMe City Tour',
     tagline: 'Discover hidden gems with a local',
     description: 'Explore historical landmarks, cultural spots, local markets, and scenic viewpoints with a local host.',
     priceStarting: 799,
@@ -67,7 +67,7 @@ const servicesData: ServiceItem[] = [
   },
   {
     id: 'event-partner',
-    name: 'Event & Concert Partner',
+    name: 'WithMe Event Buddy',
     tagline: 'Enjoy live music & events together',
     description: 'Attend stand-up shows, music concerts, art exhibitions, or theatre plays with a verified partner.',
     priceStarting: 699,
@@ -76,7 +76,7 @@ const servicesData: ServiceItem[] = [
   },
   {
     id: 'gaming-partner',
-    name: 'Gaming & Arcade Partner',
+    name: 'WithMe Gaming Buddy',
     tagline: 'Co-op gaming & arcade thrills',
     description: 'Team up for bowling, arcade gaming, esports arenas, or board game cafes.',
     priceStarting: 450,
@@ -85,7 +85,7 @@ const servicesData: ServiceItem[] = [
   },
   {
     id: 'elder-support',
-    name: 'Elderly Activity Support',
+    name: 'WithMe Elder Support',
     tagline: 'Caring company & assistance for seniors',
     description: 'Compassionate partners for park walks, library visits, light companionship, and elder conversation.',
     priceStarting: 599,
@@ -94,7 +94,7 @@ const servicesData: ServiceItem[] = [
   },
   {
     id: 'medical-support',
-    name: 'Medical Appointment Escort',
+    name: 'WithMe Medical Escort',
     tagline: 'Reassuring presence for hospital visits',
     description: 'Respectful assistance for hospital check-ups, pharmacy runs, and routine medical visits.',
     priceStarting: 699,
@@ -103,7 +103,7 @@ const servicesData: ServiceItem[] = [
   },
   {
     id: 'networking',
-    name: 'Professional Networking Partner',
+    name: 'WithMe Networking Partner',
     tagline: 'Expand your social & professional circle',
     description: 'Attend industry meetups, business summits, or networking dinners with a polished partner.',
     priceStarting: 899,
@@ -112,7 +112,7 @@ const servicesData: ServiceItem[] = [
   },
   {
     id: 'study-partner',
-    name: 'Study & Work Partner',
+    name: 'WithMe Study & Work Partner',
     tagline: 'Focused co-working & accountability',
     description: 'Boost productivity with a quiet co-working partner at cafes or public libraries.',
     priceStarting: 350,
@@ -121,7 +121,7 @@ const servicesData: ServiceItem[] = [
   },
   {
     id: 'fitness-partner',
-    name: 'Fitness & Sports Buddy',
+    name: 'WithMe Fitness Buddy',
     tagline: 'Stay active & motivated',
     description: 'Jogging companions, badminton partners, or morning walk buddies to keep you active.',
     priceStarting: 499,
@@ -130,7 +130,7 @@ const servicesData: ServiceItem[] = [
   },
   {
     id: 'food-partner',
-    name: 'Food & Fine Dining Partner',
+    name: 'WithMe Dining Partner',
     tagline: 'Explore culinary delights together',
     description: 'Try new restaurants, buffet spreads, or street food tours with a fellow food lover.',
     priceStarting: 549,

@@ -23,7 +23,7 @@ module.exports = {
     // 2. Seed Activities
     await queryInterface.bulkInsert('activities', [
       {
-        name: 'Coffee & Conversation',
+        name: 'WithMe Coffee & Conversation',
         description: 'Meet in a quiet cafe for warm coffee and friendly talks.',
         image_url: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=500',
         is_active: true,
@@ -31,7 +31,7 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        name: 'City Walk',
+        name: 'WithMe City Walk',
         description: 'Explore historical sites, parks, and pathways together.',
         image_url: 'https://images.unsplash.com/photo-1517089596392-db9a5e8c8532?w=500',
         is_active: true,
@@ -39,7 +39,7 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        name: 'Shopping Companion',
+        name: 'WithMe Shopping Companion',
         description: 'Get a second opinion on fashion and navigate local markets.',
         image_url: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=500',
         is_active: true,
@@ -47,7 +47,7 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        name: 'Movie / Entertainment',
+        name: 'WithMe Movie / Entertainment',
         description: 'Watch the latest releases in a cinema or attend local theatre shows.',
         image_url: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=500',
         is_active: true,
@@ -55,7 +55,7 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        name: 'Events',
+        name: 'WithMe Events & Shows',
         description: 'Attend art gallery openings, books launches, or stand-up shows.',
         image_url: 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=500',
         is_active: true,
@@ -63,7 +63,7 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        name: 'Sports & Fitness',
+        name: 'WithMe Sports & Fitness',
         description: 'A companion for morning badminton matches, golf, jogging, or gym sessions.',
         image_url: 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=500',
         is_active: true,
@@ -71,7 +71,7 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        name: 'Hobbies & Activities',
+        name: 'WithMe Hobbies & Activities',
         description: 'Join standard hobby classes like pottery, culinary, or painting sessions.',
         image_url: 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=500',
         is_active: true,
@@ -79,7 +79,7 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        name: 'Explore the City',
+        name: 'WithMe Explore the City',
         description: 'Discover tourist attractions, street food hubs, and hidden gems.',
         image_url: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=500',
         is_active: true,
@@ -310,20 +310,20 @@ module.exports = {
     // 8. Seed Companion Activities & Pricing
     await queryInterface.bulkInsert('companion_activities', [
       // Aisha's Activities
-      { companion_id: companionMap[userMap['Aisha Sharma']], activity_id: activityMap['Coffee & Conversation'], price_per_hour: 400.00, created_at: new Date(), updated_at: new Date() },
-      { companion_id: companionMap[userMap['Aisha Sharma']], activity_id: activityMap['Explore the City'], price_per_hour: 600.00, created_at: new Date(), updated_at: new Date() },
+      { companion_id: companionMap[userMap['Aisha Sharma']], activity_id: activityMap['WithMe Coffee & Conversation'], price_per_hour: 400.00, created_at: new Date(), updated_at: new Date() },
+      { companion_id: companionMap[userMap['Aisha Sharma']], activity_id: activityMap['WithMe Explore the City'], price_per_hour: 600.00, created_at: new Date(), updated_at: new Date() },
       
       // Rohan's Activities
-      { companion_id: companionMap[userMap['Rohan Mehta']], activity_id: activityMap['Sports & Fitness'], price_per_hour: 500.00, created_at: new Date(), updated_at: new Date() },
-      { companion_id: companionMap[userMap['Rohan Mehta']], activity_id: activityMap['City Walk'], price_per_hour: 450.00, created_at: new Date(), updated_at: new Date() },
+      { companion_id: companionMap[userMap['Rohan Mehta']], activity_id: activityMap['WithMe Sports & Fitness'], price_per_hour: 500.00, created_at: new Date(), updated_at: new Date() },
+      { companion_id: companionMap[userMap['Rohan Mehta']], activity_id: activityMap['WithMe City Walk'], price_per_hour: 450.00, created_at: new Date(), updated_at: new Date() },
       
       // Pooja's Activities
-      { companion_id: companionMap[userMap['Pooja Patel']], activity_id: activityMap['Shopping Companion'], price_per_hour: 350.00, created_at: new Date(), updated_at: new Date() },
-      { companion_id: companionMap[userMap['Pooja Patel']], activity_id: activityMap['Hobbies & Activities'], price_per_hour: 500.00, created_at: new Date(), updated_at: new Date() },
+      { companion_id: companionMap[userMap['Pooja Patel']], activity_id: activityMap['WithMe Shopping Companion'], price_per_hour: 350.00, created_at: new Date(), updated_at: new Date() },
+      { companion_id: companionMap[userMap['Pooja Patel']], activity_id: activityMap['WithMe Hobbies & Activities'], price_per_hour: 500.00, created_at: new Date(), updated_at: new Date() },
       
       // Vikram's Activities
-      { companion_id: companionMap[userMap['Vikram Singh']], activity_id: activityMap['Explore the City'], price_per_hour: 550.00, created_at: new Date(), updated_at: new Date() },
-      { companion_id: companionMap[userMap['Vikram Singh']], activity_id: activityMap['City Walk'], price_per_hour: 400.00, created_at: new Date(), updated_at: new Date() }
+      { companion_id: companionMap[userMap['Vikram Singh']], activity_id: activityMap['WithMe Explore the City'], price_per_hour: 550.00, created_at: new Date(), updated_at: new Date() },
+      { companion_id: companionMap[userMap['Vikram Singh']], activity_id: activityMap['WithMe City Walk'], price_per_hour: 400.00, created_at: new Date(), updated_at: new Date() }
     ]);
 
     // 9. Seed Companion Availability

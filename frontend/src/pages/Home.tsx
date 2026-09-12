@@ -275,7 +275,7 @@ export const Home: React.FC = () => {
             <div className="p-3.5 bg-purple-500/10 text-purple-400 rounded-2xl w-fit border border-purple-500/20">
               <Film size={26} />
             </div>
-            <h3 className="font-extrabold text-white text-base">Movie Partner</h3>
+            <h3 className="font-extrabold text-white text-base">WithMe Movie Partner</h3>
             <p className="text-xs text-slate-400 leading-relaxed font-medium">Enjoy cinema releases & movie premieres together with zero awkwardness.</p>
             <div className="flex justify-between items-center pt-3 border-t border-slate-700/60 text-xs">
               <span className="text-slate-400 font-bold">Starts from</span>
@@ -287,7 +287,7 @@ export const Home: React.FC = () => {
             <div className="p-3.5 bg-amber-500/10 text-amber-400 rounded-2xl w-fit border border-amber-500/20">
               <Coffee size={26} />
             </div>
-            <h3 className="font-extrabold text-white text-base">Coffee & Cafe Outing</h3>
+            <h3 className="font-extrabold text-white text-base">WithMe Coffee Partner</h3>
             <p className="text-xs text-slate-400 leading-relaxed font-medium">Engaging chats over coffee, tea, or weekend brunch in top local spots.</p>
             <div className="flex justify-between items-center pt-3 border-t border-slate-700/60 text-xs">
               <span className="text-slate-400 font-bold">Starts from</span>
@@ -299,7 +299,7 @@ export const Home: React.FC = () => {
             <div className="p-3.5 bg-pink-500/10 text-pink-400 rounded-2xl w-fit border border-pink-500/20">
               <ShoppingBag size={26} />
             </div>
-            <h3 className="font-extrabold text-white text-base">Shopping Buddy</h3>
+            <h3 className="font-extrabold text-white text-base">WithMe Shopping Buddy</h3>
             <p className="text-xs text-slate-400 leading-relaxed font-medium">Style guidance, wardrobe shopping assistance, and retail trip partner.</p>
             <div className="flex justify-between items-center pt-3 border-t border-slate-700/60 text-xs">
               <span className="text-slate-400 font-bold">Starts from</span>
@@ -311,7 +311,7 @@ export const Home: React.FC = () => {
             <div className="p-3.5 bg-rose-500/10 text-rose-400 rounded-2xl w-fit border border-rose-500/20">
               <HeartHandshake size={26} />
             </div>
-            <h3 className="font-extrabold text-white text-base">Elder Support</h3>
+            <h3 className="font-extrabold text-white text-base">WithMe Elder Support</h3>
             <p className="text-xs text-slate-400 leading-relaxed font-medium">Compassionate companions for park walks, medical visits, and conversation.</p>
             <div className="flex justify-between items-center pt-3 border-t border-slate-700/60 text-xs">
               <span className="text-slate-400 font-bold">Starts from</span>
