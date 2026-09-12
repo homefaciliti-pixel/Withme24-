@@ -54,23 +54,63 @@ export const Navbar: React.FC = () => {
               </span>
             </div>
 
-            {/* Desktop Navigation */}
+            {/* Desktop Navigation - Strictly Filtered by Auth State */}
             <div className="hidden md:flex items-center gap-5">
-              <Link to="/find-partner" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
-                Find Companion
-              </Link>
-              <Link to="/explore" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Explore
-              </Link>
-              <Link to="/partner-requests" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
-                Requests
-              </Link>
-              <Link to="/verification-hub" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
-                KYC Hub
-              </Link>
-              <Link to="/chat" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
-                Chat & Call
-              </Link>
+              {!isAuthenticated || !user ? (
+                /* GUEST NAV ITEMS (Unauthenticated) */
+                <>
+                  <Link to="/find-partner" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
+                    Find Companion
+                  </Link>
+                  <Link to="/how-it-works" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
+                    How It Works
+                  </Link>
+                  <Link to="/safety" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors flex items-center gap-1">
+                    Safety
+                  </Link>
+                  <Link to="/partner/register" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors flex items-center gap-1">
+                    Become a Host
+                  </Link>
+                </>
+              ) : isPartner ? (
+                /* PARTNER NAV ITEMS (Logged in as Host/Companion) */
+                <>
+                  <Link to="/companion-dashboard" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
+                    Host Dashboard
+                  </Link>
+                  <Link to="/explore" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Live Stream
+                  </Link>
+                  <Link to="/partner-requests" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
+                    Requests Inbox
+                  </Link>
+                  <Link to="/verification-hub" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
+                    Verification
+                  </Link>
+                  <Link to="/chat" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
+                    Messages & Calls
+                  </Link>
+                </>
+              ) : (
+                /* USER / CUSTOMER NAV ITEMS (Logged in as Client) */
+                <>
+                  <Link to="/find-partner" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
+                    Find Companion
+                  </Link>
+                  <Link to="/explore" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Explore
+                  </Link>
+                  <Link to="/partner-requests" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
+                    Requests
+                  </Link>
+                  <Link to="/verification-hub" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
+                    KYC Hub
+                  </Link>
+                  <Link to="/chat" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
+                    Chat & Call
+                  </Link>
+                </>
+              )}
 
               {isAuthenticated && user ? (
                 <div className="flex items-center gap-3">
@@ -79,10 +119,10 @@ export const Navbar: React.FC = () => {
                     to={getDashboardLink()}
                     className="bg-purple-50 hover:bg-purple-100 text-purple-800 text-xs font-black px-4 py-2 rounded-xl border border-purple-200 transition-all shadow-2xs"
                   >
-                    Dashboard
+                    {isPartner ? 'Host Dashboard' : 'My Account'}
                   </Link>
 
-                  {user.role === 'CUSTOMER' && (
+                  {!isPartner && user.role === 'CUSTOMER' && (
                     <button
                       onClick={handleBecomeCompanion}
                       className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-extrabold px-3.5 py-2 rounded-xl shadow-sm transition-all"
@@ -115,7 +155,7 @@ export const Navbar: React.FC = () => {
                     <div className="text-xs text-slate-700 hidden lg:block">
                       <div className="font-extrabold text-slate-800 leading-tight">{user.name || 'User'}</div>
                       <div className="text-[9px] text-purple-600 font-black uppercase tracking-wider">
-                        {user.role === 'COMPANION' ? 'HOST' : 'CUSTOMER'}
+                        {isPartner ? 'HOST / COMPANION' : 'CUSTOMER'}
                       </div>
                     </div>
                   </div>
@@ -163,57 +203,80 @@ export const Navbar: React.FC = () => {
         {/* Mobile Dropdown Menu */}
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-slate-100 bg-white p-4 space-y-3">
-            <Link
-              to="/find-partner"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
-            >
-              Find a Partner
-            </Link>
-            <Link
-              to="/services"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
-            >
-              Services
-            </Link>
-            <Link
-              to="/how-it-works"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
-            >
-              How It Works
-            </Link>
-            <Link
-              to="/become-partner"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
-            >
-              Become a Partner
-            </Link>
-            <Link
-              to="/safety"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
-            >
-              Safety Center
-            </Link>
-            <Link
-              to="/help"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
-            >
-              Help Center
-            </Link>
-
-            {isAuthenticated ? (
+            {!isAuthenticated || !user ? (
               <>
                 <Link
-                  to={getDashboardLink()}
+                  to="/find-partner"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block w-full text-center bg-brand-50 text-brand-700 font-bold py-2 rounded-lg"
+                  className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
                 >
-                  My Dashboard
+                  Find Companion
+                </Link>
+                <Link
+                  to="/how-it-works"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
+                >
+                  How It Works
+                </Link>
+                <Link
+                  to="/safety"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
+                >
+                  Safety Center
+                </Link>
+                <Link
+                  to="/partner/register"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
+                >
+                  Become a Host
+                </Link>
+                <Link
+                  to="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block w-full text-center bg-purple-700 text-white font-bold py-2.5 rounded-lg shadow-sm"
+                >
+                  Login / Sign Up
+                </Link>
+              </>
+            ) : isPartner ? (
+              <>
+                <Link
+                  to="/companion-dashboard"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
+                >
+                  Host Dashboard
+                </Link>
+                <Link
+                  to="/explore"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
+                >
+                  Live Stream
+                </Link>
+                <Link
+                  to="/partner-requests"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
+                >
+                  Requests Inbox
+                </Link>
+                <Link
+                  to="/verification-hub"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
+                >
+                  Verification Hub
+                </Link>
+                <Link
+                  to="/chat"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
+                >
+                  Messages & Calls
                 </Link>
                 <button
                   onClick={() => {
@@ -226,13 +289,59 @@ export const Navbar: React.FC = () => {
                 </button>
               </>
             ) : (
-              <Link
-                to="/login"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block w-full text-center bg-brand-600 text-white font-bold py-2.5 rounded-lg"
-              >
-                Login / Sign Up
-              </Link>
+              <>
+                <Link
+                  to="/find-partner"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
+                >
+                  Find Companion
+                </Link>
+                <Link
+                  to="/explore"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
+                >
+                  Explore
+                </Link>
+                <Link
+                  to="/partner-requests"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
+                >
+                  Requests
+                </Link>
+                <Link
+                  to="/verification-hub"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
+                >
+                  KYC Hub
+                </Link>
+                <Link
+                  to="/chat"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
+                >
+                  Chat & Call
+                </Link>
+                <Link
+                  to={getDashboardLink()}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block w-full text-center bg-brand-50 text-brand-700 font-bold py-2 rounded-lg"
+                >
+                  My Account
+                </Link>
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    handleLogout();
+                  }}
+                  className="w-full flex items-center justify-center gap-1.5 border border-slate-200 text-slate-600 font-bold py-2 rounded-lg"
+                >
+                  <LogOut size={16} /> Logout
+                </button>
+              </>
             )}
           </div>
         )}
