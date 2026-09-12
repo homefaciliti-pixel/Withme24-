@@ -148,7 +148,20 @@ export class NotificationService {
         return Boolean(response.ok && resJson.return === true);
       }
 
-      // 3. Jio Trueconnect DLT Provider (Default)
+      // 3. SMSGatewayHub DLT Provider (SMSGATEWAYHUB TECHNOLOGIES PRIVATE LIMITED)
+      if (provider === 'smsgatewayhub' || provider === 'smsgateway') {
+        const smsgatewayUrl = `https://www.smsgatewayhub.com/api/mt/SendSMS?APIKey=${encodeURIComponent(apiKey)}&senderid=${encodeURIComponent(senderId)}&channel=2&DCS=0&flashSms=0&number=${encodeURIComponent(cleanMobile)}&text=${encodeURIComponent(formattedMessage)}&route=1&PEId=${encodeURIComponent(entityId)}&TemplateId=${encodeURIComponent(dltTemplateId)}`;
+        console.log(`[SMSGATEWAYHUB-DISPATCH] Sending to ${cleanMobile} via SMSGatewayHub...`);
+        const response = await fetch(smsgatewayUrl);
+        const resJson: any = await response.json().catch(async () => {
+          const txt = await response.text();
+          return { raw: txt };
+        });
+        console.log('[SMSGATEWAYHUB-RESPONSE]', resJson);
+        return Boolean(response.ok && (resJson.ErrorCode === '000' || resJson.status === 'Success' || resJson.ErrorMessage === 'Success' || resJson.ErrorCode === 0));
+      }
+
+      // 4. Jio Trueconnect DLT Provider (Default)
       const apiUrl = process.env.SMS_API_URL || 'https://trueconnect.jio.com/api/v2/SendSMS';
 
       if (apiKey && apiKey !== 'mockSmsApiKey123') {
