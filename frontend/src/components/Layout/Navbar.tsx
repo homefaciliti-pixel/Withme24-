@@ -62,6 +62,9 @@ export const Navbar: React.FC = () => {
                   <Link to="/find-partner" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
                     Find Companion
                   </Link>
+                  <Link to="/services" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
+                    Services
+                  </Link>
                   <Link to="/how-it-works" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
                     How It Works
                   </Link>
@@ -78,17 +81,11 @@ export const Navbar: React.FC = () => {
                   <Link to="/companion-dashboard" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
                     Host Dashboard
                   </Link>
+                  <Link to="/services" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
+                    Services
+                  </Link>
                   <Link to="/explore" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors flex items-center gap-1">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Live Stream
-                  </Link>
-                  <Link to="/partner-requests" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
-                    Requests Inbox
-                  </Link>
-                  <Link to="/verification-hub" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
-                    Verification
-                  </Link>
-                  <Link to="/chat" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
-                    Messages & Calls
                   </Link>
                 </>
               ) : (
@@ -97,17 +94,11 @@ export const Navbar: React.FC = () => {
                   <Link to="/find-partner" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
                     Find Companion
                   </Link>
+                  <Link to="/services" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
+                    Services
+                  </Link>
                   <Link to="/explore" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors flex items-center gap-1">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Explore
-                  </Link>
-                  <Link to="/partner-requests" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
-                    Requests
-                  </Link>
-                  <Link to="/verification-hub" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
-                    KYC Hub
-                  </Link>
-                  <Link to="/chat" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
-                    Chat & Call
                   </Link>
                 </>
               )}
@@ -213,6 +204,13 @@ export const Navbar: React.FC = () => {
                   Find Companion
                 </Link>
                 <Link
+                  to="/services"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
+                >
+                  Services
+                </Link>
+                <Link
                   to="/how-it-works"
                   onClick={() => setMobileMenuOpen(false)}
                   className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
@@ -251,32 +249,18 @@ export const Navbar: React.FC = () => {
                   Host Dashboard
                 </Link>
                 <Link
+                  to="/services"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
+                >
+                  Services
+                </Link>
+                <Link
                   to="/explore"
                   onClick={() => setMobileMenuOpen(false)}
                   className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
                 >
                   Live Stream
-                </Link>
-                <Link
-                  to="/partner-requests"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
-                >
-                  Requests Inbox
-                </Link>
-                <Link
-                  to="/verification-hub"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
-                >
-                  Verification Hub
-                </Link>
-                <Link
-                  to="/chat"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
-                >
-                  Messages & Calls
                 </Link>
                 <button
                   onClick={() => {
@@ -298,32 +282,18 @@ export const Navbar: React.FC = () => {
                   Find Companion
                 </Link>
                 <Link
+                  to="/services"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
+                >
+                  Services
+                </Link>
+                <Link
                   to="/explore"
                   onClick={() => setMobileMenuOpen(false)}
                   className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
                 >
                   Explore
-                </Link>
-                <Link
-                  to="/partner-requests"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
-                >
-                  Requests
-                </Link>
-                <Link
-                  to="/verification-hub"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
-                >
-                  KYC Hub
-                </Link>
-                <Link
-                  to="/chat"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block text-slate-700 hover:text-brand-600 font-semibold py-1.5 text-sm"
-                >
-                  Chat & Call
                 </Link>
                 <Link
                   to={getDashboardLink()}
