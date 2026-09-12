@@ -90,7 +90,7 @@ export class NotificationService {
     const senderId = process.env.SMS_SENDER_ID || 'HMFCLI';
     const templateText = process.env.SMS_TEMPLATE_TEXT || 'Your OTP for registering on Superhome is: {#var#}. This code is valid for the next 10 minutes. Thank You, Super Home';
 
-    // Replace placeholder for Indian Jio DLT Template
+    // Format DLT message template with strict character matching
     let formattedMessage = message;
     if (otpCode) {
       formattedMessage = templateText
@@ -99,17 +99,56 @@ export class NotificationService {
         .replace('{{otp}}', otpCode);
     }
 
-    console.log(`[JIO-DLT-SMS-DISPATCH] Target: ${mobile} | SenderID: ${senderId} | EntityID: ${entityId} | TemplateID: ${dltTemplateId}`);
-    console.log(`[JIO-DLT-SMS-PAYLOAD] Content: "${formattedMessage}"`);
+    const cleanMobile = mobile.replace(/\D/g, '').slice(-10);
+    console.log(`[DLT-SMS-DISPATCH] Mobile: ${cleanMobile} | Provider: ${provider} | SenderID: ${senderId} | TemplateID: ${dltTemplateId}`);
+    console.log(`[DLT-SMS-BODY] "${formattedMessage}"`);
 
     if (provider === 'mock') {
-      console.log(`[SMS-MOCK] Sent to ${mobile}: ${formattedMessage}`);
+      console.log(`[SMS-MOCK] Dispatch simulation complete for ${cleanMobile}`);
       return true;
     }
 
     try {
-      const cleanMobile = mobile.replace(/\D/g, '').slice(-10);
-      const apiKey = process.env.SMS_API_KEY || process.env.JIO_API_KEY || '';
+      const apiKey = process.env.SMS_API_KEY || process.env.JIO_API_KEY || process.env.FAST2SMS_API_KEY || '';
+
+      // 1. Custom HTTP GET/POST URL API Gateway
+      if (process.env.SMS_API_URL && process.env.SMS_API_URL.includes('{mobile}')) {
+        const customUrl = process.env.SMS_API_URL
+          .replace('{mobile}', cleanMobile)
+          .replace('{message}', encodeURIComponent(formattedMessage))
+          .replace('{otp}', otpCode || '')
+          .replace('{sender}', senderId)
+          .replace('{template}', dltTemplateId);
+
+        console.log(`[CUSTOM-SMS-GET] Calling Gateway URL: ${customUrl}`);
+        const response = await fetch(customUrl);
+        const resText = await response.text();
+        console.log(`[CUSTOM-SMS-RESPONSE] Code ${response.status}:`, resText);
+        return response.ok;
+      }
+
+      // 2. Fast2SMS DLT Provider
+      if (provider === 'fast2sms') {
+        const response = await fetch('https://www.fast2sms.com/dev/bulkV2', {
+          method: 'POST',
+          headers: {
+            'authorization': apiKey,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            route: 'dlt',
+            sender_id: senderId,
+            message: dltTemplateId,
+            variables_values: otpCode || '',
+            numbers: cleanMobile,
+          }),
+        });
+        const resJson: any = await response.json().catch(() => ({}));
+        console.log('[FAST2SMS-DLT-RESPONSE]', resJson);
+        return Boolean(response.ok && resJson.return === true);
+      }
+
+      // 3. Jio Trueconnect DLT Provider (Default)
       const apiUrl = process.env.SMS_API_URL || 'https://trueconnect.jio.com/api/v2/SendSMS';
 
       if (apiKey && apiKey !== 'mockSmsApiKey123') {
@@ -138,11 +177,11 @@ export class NotificationService {
         console.log('[JIO-DLT-SMS-RESPONSE]', resJson);
         return Boolean(response.ok && resJson && (resJson.return === true || resJson.status === 'success' || resJson.success === true || resJson.code === 200 || resJson.code === '200'));
       } else {
-        console.log(`[JIO-DLT-SMS-READY] Jio DLT SMS Compiled & Prepared for Sender: ${senderId} (Entity: ${entityId}, Template: ${dltTemplateId}).`);
+        console.warn(`[SMS-GATEWAY-NOTICE] Live SMS API Key missing in environment variables. DLT SMS compiled for Sender: ${senderId} (Template: ${dltTemplateId}). Add SMS_API_KEY on Render to send live SMS to handsets.`);
         return true;
       }
     } catch (err) {
-      console.error('[JIO-DLT-SMS-ERROR] Failed to send SMS:', err);
+      console.error('[SMS-GATEWAY-ERROR] Exception sending SMS:', err);
       return false;
     }
   }
