@@ -2,7 +2,7 @@ import { Router, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import multer from 'multer';
 import { AuthenticatedRequest, optionalAuthenticate } from '../middleware/auth';
-import { User, OTPVerification } from '../models';
+import { User, OTP } from '../models';
 import { getStorageService } from '../services/storage';
 
 const upload = multer({
@@ -97,7 +97,7 @@ v1Router.post('/auth/send-otp', async (req: any, res: Response) => {
 
   try {
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
-    await OTPVerification.create({
+    await OTP.create({
       mobile: full_phone_number,
       otp_code: otpCode,
       purpose: 'CUSTOMER_LOGIN',
@@ -136,7 +136,7 @@ v1Router.post('/auth/verify-otp', async (req: any, res: Response) => {
     });
   }
 
-  const { country_code, phone_number, full_phone_number } = parsePhoneAndCountry(rawCountryCode, phoneToUse);
+  const { country_code, full_phone_number } = parsePhoneAndCountry(rawCountryCode, phoneToUse);
 
   let user = await User.findOne({
     where: { mobile: full_phone_number }
@@ -149,7 +149,7 @@ v1Router.post('/auth/verify-otp', async (req: any, res: Response) => {
       name: `User ${full_phone_number.slice(-4)}`,
       role: 'CUSTOMER',
       account_status: 'ACTIVE',
-      is_verified: true,
+      is_mobile_verified: true,
     });
     isNewUser = true;
   }
@@ -174,7 +174,7 @@ v1Router.post('/auth/verify-otp', async (req: any, res: Response) => {
       name: user.name,
       role: user.role,
       is_profile_complete: !!user.email,
-      kyc_status: user.is_verified ? 'VERIFIED' : 'NOT_STARTED'
+      kyc_status: user.is_mobile_verified ? 'VERIFIED' : 'NOT_STARTED'
     }
   });
 });
@@ -252,11 +252,11 @@ v1Router.get('/profile', optionalAuthenticate, async (req: AuthenticatedRequest,
       phone: user?.mobile || '+919876543210',
       email: user?.email || 'alex.sharma@example.com',
       gender: user?.gender || 'Male',
-      dob: user?.dob || '1998-05-15',
-      bio: user?.bio || 'Enthusiastic explorer and tech lover',
+      dob: user?.date_of_birth || '1998-05-15',
+      bio: 'Enthusiastic explorer and tech lover',
       interests: ['Travel', 'Music', 'Fitness', 'Cinema'],
       city: 'Mumbai',
-      kyc_status: user?.is_verified ? 'VERIFIED' : 'NOT_STARTED',
+      kyc_status: user?.is_mobile_verified ? 'VERIFIED' : 'NOT_STARTED',
       profile_image: user?.profile_photo || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=400&q=80'
     }
   });
@@ -267,9 +267,8 @@ const handleProfileEdit = async (req: AuthenticatedRequest, res: Response) => {
   if (user) {
     if (req.body.name) user.name = req.body.name;
     if (req.body.email) user.email = req.body.email;
-    if (req.body.bio) user.bio = req.body.bio;
     if (req.body.gender) user.gender = req.body.gender;
-    if (req.body.dob) user.dob = req.body.dob;
+    if (req.body.dob) user.date_of_birth = req.body.dob;
     await user.save();
   }
   return res.status(200).json({
