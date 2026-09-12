@@ -43,7 +43,7 @@ const stepsData: Step[] = [
     number: 3,
     title: 'Choose Service',
     subtitle: 'Tailored Outings & Support Services',
-    description: 'Select from Movie Partner, Coffee Outing, Shopping Buddy, Elder Support, City Tour, and more.',
+    description: 'Select from WithMe Movie Partner, WithMe Coffee Partner, WithMe Shopping Buddy, WithMe Elder Support, WithMe City Tour, and more.',
     icon: <Compass className="w-6 h-6 text-emerald-600" />,
   },
   {
