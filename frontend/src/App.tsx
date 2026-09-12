@@ -27,6 +27,11 @@ import { Pricing } from './pages/Pricing';
 import { HelpFAQ } from './pages/HelpFAQ';
 import { LegalPolicies } from './pages/LegalPolicies';
 
+import { ExploreFeed } from './pages/ExploreFeed';
+import { PartnerRequests } from './pages/PartnerRequests';
+import { VerificationHub } from './pages/VerificationHub';
+import { ActivityChatAndCall } from './pages/ActivityChatAndCall';
+
 // Customer Pages
 import { CustomerDashboard } from './pages/CustomerDashboard/Dashboard';
 import { CustomerBookings } from './pages/CustomerDashboard/Bookings';
@@ -88,6 +93,11 @@ const AppContent: React.FC = () => {
           <Route path="/code-of-conduct" element={<LegalPolicies />} />
           <Route path="/refund-policy" element={<LegalPolicies />} />
           <Route path="/cancellation-policy" element={<LegalPolicies />} />
+          <Route path="/explore" element={<ExploreFeed />} />
+          <Route path="/partner-requests" element={<PartnerRequests />} />
+          <Route path="/verification-hub" element={<VerificationHub />} />
+          <Route path="/chat" element={<ActivityChatAndCall />} />
+          <Route path="/call" element={<ActivityChatAndCall />} />
           <Route path="/partner-guidelines" element={<LegalPolicies />} />
 
           {/* Customer Dashboard Routes */}

@@ -55,21 +55,21 @@ export const Navbar: React.FC = () => {
             </div>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-6">
+            <div className="hidden md:flex items-center gap-5">
               <Link to="/find-partner" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
                 Find Companion
               </Link>
-              <Link to="/services" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
-                Services
+              <Link to="/explore" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Explore
               </Link>
-              <Link to="/how-it-works" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
-                How It Works
+              <Link to="/partner-requests" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
+                Requests
               </Link>
-              <Link to="/become-partner" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
-                Become Partner
+              <Link to="/verification-hub" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
+                KYC Hub
               </Link>
-              <Link to="/safety" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
-                Safety
+              <Link to="/chat" className="text-slate-600 hover:text-purple-700 text-xs sm:text-sm font-bold transition-colors">
+                Chat & Call
               </Link>
 
               {isAuthenticated && user ? (

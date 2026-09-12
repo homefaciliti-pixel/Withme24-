@@ -45,7 +45,12 @@ import {
   cityAdminSchema,
 } from '../utils/validation';
 
+import v1Router from './v1Routes';
+
 const router = Router();
+
+// Mount WitMe User App API v1 Endpoints
+router.use('/v1', v1Router);
 
 // Configure Multer for secure KYC uploads (memory-buffer storage)
 const upload = multer({
