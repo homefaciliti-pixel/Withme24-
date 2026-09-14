@@ -400,15 +400,15 @@ export const PartnerRegister: React.FC = () => {
                       <p className="text-[11px] font-bold text-purple-700 truncate">Document Uploaded</p>
                       <label className="cursor-pointer text-[10px] font-bold text-slate-500 underline block">
                         Change File
-                        <input type="file" accept="image/*,.pdf" onChange={(e) => handleFileUpload(e, setKycFront)} className="hidden" />
+                        <input type="file" accept="image/*,application/pdf,.pdf,.png,.jpg,.jpeg,.webp" onChange={(e) => handleFileUpload(e, setKycFront)} className="hidden" />
                       </label>
                     </div>
                   ) : (
                     <label className="cursor-pointer space-y-2 block">
                       <Upload size={24} className="mx-auto text-slate-400" />
                       <p className="text-xs font-bold text-slate-600">Upload Front Side</p>
-                      <p className="text-[10px] text-slate-400">JPG, PNG or PDF (Max 5MB)</p>
-                      <input type="file" accept="image/*,.pdf" onChange={(e) => handleFileUpload(e, setKycFront)} className="hidden" />
+                      <p className="text-[10px] text-slate-400">JPG, PNG, WEBP or PDF (Max 50MB)</p>
+                      <input type="file" accept="image/*,application/pdf,.pdf,.png,.jpg,.jpeg,.webp" onChange={(e) => handleFileUpload(e, setKycFront)} className="hidden" />
                     </label>
                   )}
                 </div>
@@ -423,15 +423,15 @@ export const PartnerRegister: React.FC = () => {
                       <p className="text-[11px] font-bold text-purple-700 truncate">Document Uploaded</p>
                       <label className="cursor-pointer text-[10px] font-bold text-slate-500 underline block">
                         Change File
-                        <input type="file" accept="image/*,.pdf" onChange={(e) => handleFileUpload(e, setKycBack)} className="hidden" />
+                        <input type="file" accept="image/*,application/pdf,.pdf,.png,.jpg,.jpeg,.webp" onChange={(e) => handleFileUpload(e, setKycBack)} className="hidden" />
                       </label>
                     </div>
                   ) : (
                     <label className="cursor-pointer space-y-2 block">
                       <Upload size={24} className="mx-auto text-slate-400" />
                       <p className="text-xs font-bold text-slate-600">Upload Back Side</p>
-                      <p className="text-[10px] text-slate-400">JPG, PNG or PDF (Max 5MB)</p>
-                      <input type="file" accept="image/*,.pdf" onChange={(e) => handleFileUpload(e, setKycBack)} className="hidden" />
+                      <p className="text-[10px] text-slate-400">JPG, PNG, WEBP or PDF (Max 50MB)</p>
+                      <input type="file" accept="image/*,application/pdf,.pdf,.png,.jpg,.jpeg,.webp" onChange={(e) => handleFileUpload(e, setKycBack)} className="hidden" />
                     </label>
                   )}
                 </div>
