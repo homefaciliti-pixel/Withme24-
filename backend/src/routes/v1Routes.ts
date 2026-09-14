@@ -104,8 +104,12 @@ v1Router.post('/auth/send-otp', async (req: any, res: Response) => {
       expires_at: expiresAt,
       is_used: false,
     });
+
+    // Actually trigger the SMS to the user via NotificationService
+    const { NotificationService } = require('../services/notification');
+    await NotificationService.sendSmsGateway(full_phone_number, '', otpCode);
   } catch (err: any) {
-    console.warn('[v1/auth/send-otp] DB Warning:', err.message);
+    console.warn('[v1/auth/send-otp] Error:', err.message);
   }
 
   return res.status(200).json({
@@ -189,6 +193,24 @@ v1Router.post('/auth/resend-otp', async (req: any, res: Response) => {
   }
 
   const { country_code, phone_number, full_phone_number } = parsePhoneAndCountry(rawCountryCode, phoneToUse);
+
+  try {
+    // Generate a new OTP since we don't have the old one easily accessible without DB query
+    const otpCode = Math.floor(1000 + Math.random() * 9000).toString();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+    await OTP.create({
+      mobile: full_phone_number,
+      otp_code: otpCode,
+      purpose: 'CUSTOMER_LOGIN',
+      expires_at: expiresAt,
+      is_used: false,
+    });
+
+    const { NotificationService } = require('../services/notification');
+    await NotificationService.sendSmsGateway(full_phone_number, '', otpCode);
+  } catch (err: any) {
+    console.warn('[v1/auth/resend-otp] Error:', err.message);
+  }
 
   return res.status(200).json({
     success: true,
