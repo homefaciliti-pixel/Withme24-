@@ -105,11 +105,17 @@ export class NotificationService {
 
     if (provider === 'mock') {
       console.log(`[SMS-MOCK] Dispatch simulation complete for ${cleanMobile}`);
-      return true;
+      // Fallback to actual SMS if API key is present to prevent accidental mock in production
+      if (!process.env.SMS_API_KEY) {
+        return true;
+      }
     }
 
     try {
       const apiKey = process.env.SMS_API_KEY || process.env.APIKey || process.env.JIO_API_KEY || process.env.FAST2SMS_API_KEY || 'b395HRZTRUGZThPOeRSnVg';
+      
+      // Force provider to smsgatewayhub if we have its API key
+      const finalProvider = (apiKey === 'b395HRZTRUGZThPOeRSnVg' || provider === 'mock') ? 'smsgatewayhub' : provider;
 
       // 1. Custom HTTP GET/POST URL API Gateway
       if (process.env.SMS_API_URL && process.env.SMS_API_URL.includes('{mobile}')) {
@@ -128,7 +134,7 @@ export class NotificationService {
       }
 
       // 2. Fast2SMS DLT Provider
-      if (provider === 'fast2sms') {
+      if (finalProvider === 'fast2sms') {
         const response = await fetch('https://www.fast2sms.com/dev/bulkV2', {
           method: 'POST',
           headers: {
@@ -149,7 +155,7 @@ export class NotificationService {
       }
 
       // 3. SMSGatewayHub DLT Provider (SMSGATEWAYHUB TECHNOLOGIES PRIVATE LIMITED)
-      if (provider === 'smsgatewayhub' || provider === 'smsgateway') {
+      if (finalProvider === 'smsgatewayhub' || finalProvider === 'smsgateway') {
         const smsgatewayUrl = `https://www.smsgatewayhub.com/api/mt/SendSMS?APIKey=${encodeURIComponent(apiKey)}&senderid=${encodeURIComponent(senderId)}&channel=2&DCS=0&flashSms=0&number=${encodeURIComponent(cleanMobile)}&text=${encodeURIComponent(formattedMessage)}&route=1&PEId=${encodeURIComponent(entityId)}&TemplateId=${encodeURIComponent(dltTemplateId)}`;
         console.log(`[SMSGATEWAYHUB-DISPATCH] Sending to ${cleanMobile} via SMSGatewayHub...`);
         
