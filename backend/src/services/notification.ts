@@ -83,7 +83,7 @@ export class NotificationService {
    * Integration point for SMS Providers (e.g. DLT, Fast2SMS, MSG91, Twilio)
    */
   public static async sendSmsGateway(mobile: string, message: string, otpCode?: string): Promise<boolean> {
-    const provider = (process.env.SMS_PROVIDER || 'jio').toLowerCase();
+    const provider = (process.env.SMS_PROVIDER || process.env.SMSProvider || 'smsgatewayhub').toLowerCase();
 
     const entityId = process.env.SMS_ENTITY_ID || '1201173444411453897';
     const dltTemplateId = process.env.SMS_DLT_TEMPLATE_ID || '1207173589889308632';
@@ -109,7 +109,7 @@ export class NotificationService {
     }
 
     try {
-      const apiKey = process.env.SMS_API_KEY || process.env.JIO_API_KEY || process.env.FAST2SMS_API_KEY || '';
+      const apiKey = process.env.SMS_API_KEY || process.env.APIKey || process.env.JIO_API_KEY || process.env.FAST2SMS_API_KEY || 'b395HRZTRUGZThPOeRSnVg';
 
       // 1. Custom HTTP GET/POST URL API Gateway
       if (process.env.SMS_API_URL && process.env.SMS_API_URL.includes('{mobile}')) {
