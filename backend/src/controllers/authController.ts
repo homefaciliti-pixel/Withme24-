@@ -66,8 +66,10 @@ export class AuthController {
         console.warn('[SendOTP] Database OTP log warning:', dbErr);
       }
 
-      // Dispatch SMS asynchronously without blocking HTTP response
-      NotificationService.sendSmsGateway(mobile, `Your OTP for WithMe24 is ${otpCode}`, otpCode).catch(() => {});
+      // Dispatch SMS and await completion so serverless/PaaS event loop doesn't kill network request
+      await NotificationService.sendSmsGateway(mobile, `Your OTP for WithMe24 is ${otpCode}`, otpCode).catch((err) => {
+        console.error('[SendOTP-Error]', err);
+      });
 
       return res.status(200).json({
         success: true,
@@ -390,7 +392,9 @@ export class AuthController {
         }).catch(() => {});
       }
 
-      NotificationService.sendSmsGateway(mobile, `Your OTP for WithMe24 is ${otpCode}`, otpCode).catch(() => {});
+      await NotificationService.sendSmsGateway(mobile, `Your OTP for WithMe24 is ${otpCode}`, otpCode).catch((err) => {
+        console.error('[SendCustomerOTP-Error]', err);
+      });
 
       return res.status(200).json({
         success: true,
@@ -580,7 +584,9 @@ export class AuthController {
         });
       }
 
-      NotificationService.sendSmsGateway(mobile, `Your OTP for WithMe24 Partner Registration is ${otpCode}`, otpCode).catch(() => {});
+      await NotificationService.sendSmsGateway(mobile, `Your OTP for WithMe24 Partner Registration is ${otpCode}`, otpCode).catch((err) => {
+        console.error('[SendPartnerOTP-Error]', err);
+      });
 
       return res.status(200).json({
         success: true,
@@ -897,7 +903,9 @@ export class AuthController {
         });
       }
 
-      NotificationService.sendSmsGateway(mobile, `Your password reset OTP is ${otpCode}`, otpCode).catch(() => {});
+      await NotificationService.sendSmsGateway(mobile, `Your password reset OTP is ${otpCode}`, otpCode).catch((err) => {
+        console.error('[SendResetOTP-Error]', err);
+      });
 
       return res.status(200).json({
         success: true,
