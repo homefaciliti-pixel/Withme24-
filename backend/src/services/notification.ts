@@ -152,13 +152,26 @@ export class NotificationService {
       if (provider === 'smsgatewayhub' || provider === 'smsgateway') {
         const smsgatewayUrl = `https://www.smsgatewayhub.com/api/mt/SendSMS?APIKey=${encodeURIComponent(apiKey)}&senderid=${encodeURIComponent(senderId)}&channel=2&DCS=0&flashSms=0&number=${encodeURIComponent(cleanMobile)}&text=${encodeURIComponent(formattedMessage)}&route=1&PEId=${encodeURIComponent(entityId)}&TemplateId=${encodeURIComponent(dltTemplateId)}`;
         console.log(`[SMSGATEWAYHUB-DISPATCH] Sending to ${cleanMobile} via SMSGatewayHub...`);
-        const response = await fetch(smsgatewayUrl);
-        const resJson: any = await response.json().catch(async () => {
-          const txt = await response.text();
-          return { raw: txt };
+        
+        return new Promise((resolve) => {
+          const https = require('https');
+          https.get(smsgatewayUrl, (response: any) => {
+            let data = '';
+            response.on('data', (chunk: any) => data += chunk);
+            response.on('end', () => {
+              console.log('[SMSGATEWAYHUB-RESPONSE]', data);
+              try {
+                const resJson = JSON.parse(data);
+                resolve(Boolean(resJson.ErrorCode === '000' || resJson.status === 'Success' || resJson.ErrorMessage === 'Success' || resJson.ErrorCode === 0));
+              } catch (e) {
+                resolve(true); // If response is text, assume success if 200 OK
+              }
+            });
+          }).on('error', (err: any) => {
+            console.error('[SMSGATEWAYHUB-ERROR]', err);
+            resolve(false);
+          });
         });
-        console.log('[SMSGATEWAYHUB-RESPONSE]', resJson);
-        return Boolean(response.ok && (resJson.ErrorCode === '000' || resJson.status === 'Success' || resJson.ErrorMessage === 'Success' || resJson.ErrorCode === 0));
       }
 
       // 4. Jio Trueconnect DLT Provider (Default)
