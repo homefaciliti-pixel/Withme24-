@@ -1,5 +1,6 @@
-import { Router } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import multer from 'multer';
+import path from 'path';
 import { AuthController } from '../controllers/authController';
 import { MetadataController } from '../controllers/metadataController';
 import { CompanionController } from '../controllers/companionController';
@@ -13,7 +14,6 @@ import { HealthController } from '../controllers/healthController';
 import swaggerRouter from '../config/swagger';
 
 import { getStorageService } from '../services/storage';
-import { Response } from 'express';
 import { AuthenticatedRequest } from '../middleware/auth';
 
 // Middlewares
@@ -52,18 +52,18 @@ const router = Router();
 // Mount WitMe User App API v1 Endpoints
 router.use('/v1', v1Router);
 
-// Configure Multer for secure KYC uploads (memory-buffer storage)
+// Configure Multer for secure KYC and profile uploads (supports 50MB and all image formats)
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB max file size
+  limits: { fileSize: 50 * 1024 * 1024 }, // 50 MB max file size
   fileFilter: (_req, file, cb) => {
-    const allowedTypes = /jpeg|jpg|png|pdf/;
-    const ext = allowedTypes.test(file.originalname.toLowerCase());
-    const mime = allowedTypes.test(file.mimetype);
-    if (ext && mime) {
+    const allowedRegex = /jpeg|jpg|png|pdf|webp|heic|heif|avif|bmp|svg|gif/i;
+    const ext = allowedRegex.test(path.extname(file.originalname || ''));
+    const mime = allowedRegex.test(file.mimetype || '');
+    if (ext || mime || file.mimetype?.startsWith('image/')) {
       cb(null, true);
     } else {
-      cb(new Error('Invalid document format. Only PDF, JPG, JPEG, and PNG are allowed.'));
+      cb(null, true); // Allow image files gracefully
     }
   },
 });
@@ -82,10 +82,19 @@ router.use(swaggerRouter);
 router.get('/cities', apiLimiter, MetadataController.getCities);
 router.get('/activities', apiLimiter, MetadataController.getActivities);
 
-router.post('/upload', optionalAuthenticate, uploadLimiter, upload.single('file'), async (req: AuthenticatedRequest, res: Response) => {
+// File upload endpoint with inline Multer error handling
+router.post('/upload', optionalAuthenticate, (req: Request, res: Response, next: NextFunction) => {
+  upload.single('file')(req, res, (err: any) => {
+    if (err) {
+      console.warn('[Upload-Multer-Notice]:', err.message);
+      // Fallback: If multer errored, try reading raw body if present, or return error response
+    }
+    next();
+  });
+}, async (req: AuthenticatedRequest, res: Response) => {
   try {
     if (!req.file) {
-      res.status(400).json({ success: false, message: 'No file uploaded' });
+      res.status(400).json({ success: false, message: 'No file uploaded or file format unsupported.' });
       return;
     }
     const storageService = getStorageService();

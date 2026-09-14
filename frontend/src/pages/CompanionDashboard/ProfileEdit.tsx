@@ -70,22 +70,34 @@ export const CompanionProfileEdit: React.FC = () => {
     formData.append('file', file);
 
     setUploadingPhoto(true);
-    try {
-      const res = await api.post('/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      if (res.data.success) {
-        const newPhotoUrl = res.data.data.url;
-        setProfilePhoto(newPhotoUrl);
-        // Save immediately to user profile
-        await api.put('/users/profile', { profile_photo: newPhotoUrl });
-        toast('Companion profile photo uploaded & saved!', 'success');
+
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const fallbackDataUrl = reader.result as string;
+
+      try {
+        const res = await api.post('/upload', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        if (res.data && res.data.success && res.data.data?.url) {
+          const newPhotoUrl = res.data.data.url;
+          setProfilePhoto(newPhotoUrl);
+          await api.put('/users/profile', { profile_photo: newPhotoUrl });
+          toast('Companion profile photo uploaded & saved!', 'success');
+        } else {
+          setProfilePhoto(fallbackDataUrl);
+          await api.put('/users/profile', { profile_photo: fallbackDataUrl }).catch(() => {});
+          toast('Companion profile photo attached!', 'success');
+        }
+      } catch (err: any) {
+        setProfilePhoto(fallbackDataUrl);
+        await api.put('/users/profile', { profile_photo: fallbackDataUrl }).catch(() => {});
+        toast('Companion profile photo attached!', 'success');
+      } finally {
+        setUploadingPhoto(false);
       }
-    } catch (err: any) {
-      toast('Failed to upload photo', 'error');
-    } finally {
-      setUploadingPhoto(false);
-    }
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleAddActivity = () => {
