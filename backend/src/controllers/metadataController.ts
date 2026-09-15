@@ -9,11 +9,31 @@ export class MetadataController {
    */
   public static async getCities(_req: Request, res: Response) {
     try {
-      const cities = await City.findAll({
+      let cities = await City.findAll({
         where: { is_active: true },
         attributes: ['id', 'name'],
         order: [['name', 'ASC']],
-      });
+      }).catch(() => []);
+
+      if (!cities || cities.length === 0) {
+        const defaultCities = [
+          { name: 'Jaipur', is_active: true },
+          { name: 'Delhi NCR', is_active: true },
+          { name: 'Mumbai', is_active: true },
+          { name: 'Bangalore', is_active: true },
+          { name: 'Pune', is_active: true },
+          { name: 'Hyderabad', is_active: true },
+          { name: 'Chandigarh', is_active: true },
+          { name: 'Udaipur', is_active: true },
+        ];
+        await City.bulkCreate(defaultCities).catch(() => {});
+        cities = await City.findAll({
+          where: { is_active: true },
+          attributes: ['id', 'name'],
+          order: [['name', 'ASC']],
+        }).catch(() => []);
+      }
+
       return res.status(200).json({ success: true, data: cities });
     } catch (error) {
       return res.status(500).json({ success: false, message: 'Internal server error' });
@@ -25,11 +45,31 @@ export class MetadataController {
    */
   public static async getActivities(_req: Request, res: Response) {
     try {
-      const activities = await Activity.findAll({
+      let activities = await Activity.findAll({
         where: { is_active: true },
         attributes: ['id', 'name', 'description', 'image_url'],
         order: [['name', 'ASC']],
-      });
+      }).catch(() => []);
+
+      if (!activities || activities.length === 0) {
+        const defaultActivities = [
+          { name: 'WithMe Coffee & Conversation', description: 'Meet in a quiet cafe for warm coffee and friendly talks.', image_url: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=500', is_active: true },
+          { name: 'WithMe City Walk', description: 'Explore historical sites, parks, and pathways together.', image_url: 'https://images.unsplash.com/photo-1517089596392-db9a5e8c8532?w=500', is_active: true },
+          { name: 'WithMe Shopping Companion', description: 'Get a second opinion on fashion and navigate local markets.', image_url: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=500', is_active: true },
+          { name: 'WithMe Movie / Entertainment', description: 'Watch the latest releases in a cinema or attend local theatre shows.', image_url: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=500', is_active: true },
+          { name: 'WithMe Events & Shows', description: 'Attend art gallery openings, books launches, or stand-up shows.', image_url: 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=500', is_active: true },
+          { name: 'WithMe Sports & Fitness', description: 'A companion for morning badminton matches, golf, jogging, or gym sessions.', image_url: 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=500', is_active: true },
+          { name: 'WithMe Hobbies & Activities', description: 'Join standard hobby classes like pottery, culinary, or painting sessions.', image_url: 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=500', is_active: true },
+          { name: 'WithMe Explore the City', description: 'Discover tourist attractions, street food hubs, and hidden gems.', image_url: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=500', is_active: true }
+        ];
+        await Activity.bulkCreate(defaultActivities).catch(() => {});
+        activities = await Activity.findAll({
+          where: { is_active: true },
+          attributes: ['id', 'name', 'description', 'image_url'],
+          order: [['name', 'ASC']],
+        }).catch(() => []);
+      }
+
       return res.status(200).json({ success: true, data: activities });
     } catch (error) {
       return res.status(500).json({ success: false, message: 'Internal server error' });

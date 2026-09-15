@@ -38,9 +38,29 @@ const featuredCities = [
   { name: 'Hyderabad', partners: '95+ Verified Hosts', image: 'https://images.unsplash.com/photo-1605379399642-870262d3d051?auto=format&fit=crop&w=600&q=80' },
 ];
 
+const DEFAULT_CITIES = [
+  { id: 1, name: 'Delhi NCR' },
+  { id: 2, name: 'Mumbai' },
+  { id: 3, name: 'Bangalore' },
+  { id: 4, name: 'Jaipur' },
+  { id: 5, name: 'Pune' },
+  { id: 6, name: 'Hyderabad' },
+];
+
+const DEFAULT_ACTIVITIES = [
+  { id: 1, name: 'WithMe Coffee & Conversation' },
+  { id: 2, name: 'WithMe City Walk' },
+  { id: 3, name: 'WithMe Shopping Companion' },
+  { id: 4, name: 'WithMe Movie / Entertainment' },
+  { id: 5, name: 'WithMe Events & Shows' },
+  { id: 6, name: 'WithMe Sports & Fitness' },
+  { id: 7, name: 'WithMe Hobbies & Activities' },
+  { id: 8, name: 'WithMe Explore the City' },
+];
+
 export const Home: React.FC = () => {
-  const [cities, setCities] = useState<City[]>([]);
-  const [activities, setActivities] = useState<Activity[]>([]);
+  const [cities, setCities] = useState<City[]>(DEFAULT_CITIES);
+  const [activities, setActivities] = useState<Activity[]>(DEFAULT_ACTIVITIES);
   const [selectedCity, setSelectedCity] = useState('');
   const [selectedActivity, setSelectedActivity] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
@@ -48,11 +68,12 @@ export const Home: React.FC = () => {
 
   useEffect(() => {
     api.get('/cities').then((res) => {
-      if (res.data.success) setCities(res.data.data);
-    });
+      if (res.data?.success && res.data.data?.length > 0) setCities(res.data.data);
+    }).catch(() => {});
+
     api.get('/activities').then((res) => {
-      if (res.data.success) setActivities(res.data.data);
-    });
+      if (res.data?.success && res.data.data?.length > 0) setActivities(res.data.data);
+    }).catch(() => {});
   }, []);
 
   const handleSearch = () => {

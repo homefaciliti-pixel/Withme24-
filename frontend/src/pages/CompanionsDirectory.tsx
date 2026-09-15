@@ -26,11 +26,31 @@ interface Companion {
   }>;
 }
 
+const DEFAULT_CITIES = [
+  { id: 1, name: 'Delhi NCR' },
+  { id: 2, name: 'Mumbai' },
+  { id: 3, name: 'Bangalore' },
+  { id: 4, name: 'Jaipur' },
+  { id: 5, name: 'Pune' },
+  { id: 6, name: 'Hyderabad' },
+];
+
+const DEFAULT_ACTIVITIES = [
+  { id: 1, name: 'WithMe Coffee & Conversation' },
+  { id: 2, name: 'WithMe City Walk' },
+  { id: 3, name: 'WithMe Shopping Companion' },
+  { id: 4, name: 'WithMe Movie / Entertainment' },
+  { id: 5, name: 'WithMe Events & Shows' },
+  { id: 6, name: 'WithMe Sports & Fitness' },
+  { id: 7, name: 'WithMe Hobbies & Activities' },
+  { id: 8, name: 'WithMe Explore the City' },
+];
+
 export const CompanionsDirectory: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [companions, setCompanions] = useState<Companion[]>([]);
-  const [cities, setCities] = useState<Array<{ id: number; name: string }>>([]);
-  const [activities, setActivities] = useState<Array<{ id: number; name: string }>>([]);
+  const [cities, setCities] = useState<Array<{ id: number; name: string }>>(DEFAULT_CITIES);
+  const [activities, setActivities] = useState<Array<{ id: number; name: string }>>(DEFAULT_ACTIVITIES);
   const [loading, setLoading] = useState(true);
 
   // Read filter params
@@ -42,11 +62,12 @@ export const CompanionsDirectory: React.FC = () => {
   useEffect(() => {
     // Load metadata
     api.get('/cities').then((res) => {
-      if (res.data.success) setCities(res.data.data);
-    });
+      if (res.data?.success && res.data.data?.length > 0) setCities(res.data.data);
+    }).catch(() => {});
+
     api.get('/activities').then((res) => {
-      if (res.data.success) setActivities(res.data.data);
-    });
+      if (res.data?.success && res.data.data?.length > 0) setActivities(res.data.data);
+    }).catch(() => {});
   }, []);
 
   const loadCompanions = () => {
